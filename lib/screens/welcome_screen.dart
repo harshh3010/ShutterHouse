@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:shutterhouse/components/rounded_button.dart';
+import 'package:shutterhouse/screens/login_screen.dart';
+import 'package:shutterhouse/screens/registration_screen.dart';
 import 'package:shutterhouse/utilities/constants.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -66,7 +68,7 @@ class WelcomeScreen extends StatelessWidget {
                       color: kColorRed,
                       text: 'Login',
                       onPressed: (){
-                        // TODO: code
+                        Navigator.pushNamed(context,LoginScreen.id);
                       },
                     ),
                     SizedBox(
@@ -76,7 +78,7 @@ class WelcomeScreen extends StatelessWidget {
                       color: kColorBlue,
                       text: 'Register',
                       onPressed: (){
-                        // TODO: code
+                        Navigator.pushNamed(context,RegistrationScreen.id);
                       },
                     ),
                   ],
