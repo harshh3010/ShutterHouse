@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 InputDecoration textInputDecoration(
-    {@required Color color, @required String hint,IconData icon}) {
+    {@required Color color, @required String hint,IconData icon,@required bool showError}) {
   return InputDecoration(
     hintText: hint,
+    errorText: showError ? 'This field cannot be empty' : null,
     contentPadding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
     border: OutlineInputBorder(
       borderSide: BorderSide(color: color, width: 1.0),
