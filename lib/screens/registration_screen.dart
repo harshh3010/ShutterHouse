@@ -9,6 +9,8 @@ import 'package:shutterhouse/components/text_input_decoration.dart';
 import 'package:shutterhouse/screens/home_screen.dart';
 import 'package:shutterhouse/utilities/constants.dart';
 
+import 'details_screen.dart';
+
 class RegistrationScreen extends StatefulWidget {
   static final String id = 'registration_screen';
   @override
@@ -95,7 +97,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 e = false;
                               });
                             },
-                            decoration: textInputDecoration(color: kColorBlue, hint: 'Enter email address',icon : Icons.person,showError: e),
+                            decoration: textInputDecoration(color: kColorBlue, hint: 'Enter email address',icon : Icons.mail,showError: e),
                             style: TextStyle(
                               fontFamily: 'Proxima Nova',
                             ),
@@ -155,7 +157,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 try{
                                   final newUser = await _auth.createUserWithEmailAndPassword(email: _email, password: _password);
                                   if(newUser != null){
-                                    Navigator.pushNamed(context, HomeScreen.id);
+                                    Navigator.pushNamed(context, DetailsScreen.id);
                                   }
                                 }catch(e){
                                   switch(e.code){
