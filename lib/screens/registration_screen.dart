@@ -17,7 +17,7 @@ class RegistrationScreen extends StatefulWidget {
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
   final _auth = FirebaseAuth.instance;
-  String email,password,cnfpassword;
+  String _email,_password,_cnfpassword;
   bool e = false,p = false,cp = false,_loading = false;
 
   void showErrorBox(context,String error){
@@ -46,7 +46,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       top: false,
       child: ModalProgressHUD(
         inAsyncCall: _loading,
-        color: kColorBlue,
+        color: Colors.white,
         opacity: 0.5,
         progressIndicator: CircularProgressIndicator(
           valueColor: new AlwaysStoppedAnimation<Color>(kColorBlue),
@@ -90,7 +90,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           child: TextField(
                             keyboardType: TextInputType.emailAddress,
                             onChanged: (value) {
-                              email = value;
+                              _email = value;
                               setState(() {
                                 e = false;
                               });
@@ -109,7 +109,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           child: TextField(
                             obscureText: true,
                             onChanged: (value) {
-                              password = value;
+                              _password = value;
                               setState(() {
                                 p = false;
                               });
@@ -131,7 +131,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               setState(() {
                                 cp = false;
                               });
-                              cnfpassword = value;
+                              _cnfpassword = value;
                             },
                             decoration: textInputDecoration(color: kColorBlue, hint: 'Confirm password',icon : Icons.vpn_key,showError: cp),
                             style: TextStyle(
@@ -148,12 +148,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             color: kColorBlue,
                             text: 'Register',
                             onPressed: () async {
-                              if(email != null && password != null && cnfpassword == password){
+                              if(_email != null && _password != null && _cnfpassword == _password){
                                 setState(() {
                                   _loading = true;
                                 });
                                 try{
-                                  final newUser = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+                                  final newUser = await _auth.createUserWithEmailAndPassword(email: _email, password: _password);
                                   if(newUser != null){
                                     Navigator.pushNamed(context, HomeScreen.id);
                                   }
@@ -172,19 +172,19 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                   _loading = false;
                                 });
                               }else{
-                                if(email == null)
+                                if(_email == null)
                                   setState(() {
                                     e = true;
                                   });
-                                if(password == null)
+                                if(_password == null)
                                  setState(() {
                                    p = true;
                                  });
-                                if(cnfpassword == null)
+                                if(_cnfpassword == null)
                                   setState(() {
                                     cp = true;
                                   });
-                                if(cnfpassword != null && cnfpassword != password)
+                                if(_cnfpassword != null && _cnfpassword != _password)
                                   showErrorBox(context,'The confirmation password did not match with chosen password');
                               }
                             },
