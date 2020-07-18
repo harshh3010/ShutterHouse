@@ -19,11 +19,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
   TextEditingController _codeController = TextEditingController();
   String smsCode;
   String verificationId;
-  String _phoneNo;
+  String _phoneNo,_name;
   bool _loading = false;
   AuthCredential _credential;
   FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseUser _currentUser;
+  bool p = false,n = false,l = false;
 
   @override
   void initState() {
@@ -73,7 +74,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
   Future registerUser(String mobile, BuildContext context) async{
     _auth.verifyPhoneNumber(
         phoneNumber: '+91' + mobile,
-        timeout: Duration(seconds: 60),
+        timeout: Duration(seconds: 120),
         verificationCompleted: (AuthCredential authCredential){
           verifySuccess();
         },
@@ -103,13 +104,13 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     textColor: Colors.white,
                     color: kColorRed,
                     onPressed: () {
-                      FirebaseAuth auth = FirebaseAuth.instance;
                       smsCode = _codeController.text.trim();
 
                       _credential = null;
                       _credential = PhoneAuthProvider.getCredential(verificationId: verificationId, smsCode: smsCode);
 
                       _currentUser.linkWithCredential(_credential).then((user) {
+                        Navigator.pop(context);
                         verifySuccess();
                       }).catchError((error) {
                         print(error.toString());
@@ -159,9 +160,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 30.0),
                 child: TextField(
                   onChanged: (value){
-                    // TODO : code
+                    _name = value;
                   },
-                  decoration: textInputDecoration(color: kColorRed, hint: 'Enter full name', showError: false,icon: Icons.person),
+                  decoration: textInputDecoration(color: kColorRed, hint: 'Enter full name', showError: n,icon: Icons.person),
                 ),
               ),
               SizedBox(
@@ -174,7 +175,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   onChanged: (value){
                     _phoneNo = value;
                   },
-                  decoration: textInputDecoration(color: kColorRed, hint: 'Enter contact number', showError: false,icon: Icons.phone),
+                  decoration: textInputDecoration(color: kColorRed, hint: 'Enter contact number', showError: p,icon: Icons.phone),
                 ),
               ),
               SizedBox(
@@ -186,7 +187,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   onChanged: (value){
                     // TODO : code
                   },
-                  decoration: textInputDecoration(color: kColorRed, hint: 'Enter address', showError: false,icon: Icons.location_on),
+                  decoration: textInputDecoration(color: kColorRed, hint: 'Enter address', showError: l,icon: Icons.location_on),
                 ),
               ),
               Padding(
@@ -194,7 +195,18 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 child: RoundedButton(
                   color: kColorRed,
                   onPressed: (){
-                    registerUser(_phoneNo, context);
+                    if(_phoneNo != null && _name != null){
+                      registerUser(_phoneNo, context);
+                    }else{
+                      if(_phoneNo == null)
+                        setState(() {
+                          p = true;
+                        });
+                      if(_name == null)
+                        setState(() {
+                          n = true;
+                        });
+                    }
                   },
                   text: 'Continue',
                 ),
