@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -5,8 +6,10 @@ import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:shutterhouse/components/alert_box.dart';
 import 'package:shutterhouse/components/rounded_button.dart';
 import 'package:shutterhouse/components/text_input_decoration.dart';
+import 'package:shutterhouse/model/user.dart';
 import 'package:shutterhouse/screens/home_screen.dart';
 import 'package:shutterhouse/utilities/constants.dart';
+import 'package:shutterhouse/utilities/user_api.dart';
 
 class DetailsScreen extends StatefulWidget {
   static final String id = 'details_screen';
@@ -16,44 +19,52 @@ class DetailsScreen extends StatefulWidget {
 
 class _DetailsScreenState extends State<DetailsScreen> {
 
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final Firestore _firestore = Firestore.instance;
+  FirebaseUser _currentUser;
+  AuthCredential _credential;
 
   TextEditingController _codeController = TextEditingController();
   TextEditingController _addressController = TextEditingController();
-  String smsCode;
-  String verificationId;
-  String _phoneNo,_name;
-  bool _loading = false;
-  AuthCredential _credential;
-  FirebaseAuth _auth = FirebaseAuth.instance;
-  bool isEnabled = true;
-  FirebaseUser _currentUser;
-  bool p = false,n = false,l = false;
-  String _address = "";
+  String _phoneNo,_name,smsCode,verificationId,_address = "";
+  bool p = false,n = false,l = false,isEnabled = true,_loading = false;
+  Position position;
 
-  @override
-  void initState() {
-    super.initState();
-    getCurrentUser();
-  }
+  void addUserData() async {
+    setState(() {
+      _loading = true;
+    });
 
-  void getCurrentUser() async{
-    try{
-      final user = await _auth.currentUser();
-      if(user != null){
-        _currentUser = user;
-      }
-    }catch(e){
-      print(e);
-    }
+    User user = User(
+      name: _name,
+      phoneNo: _phoneNo,
+      address: _address,
+      email: _currentUser.email,
+      latitude: position.latitude,
+      longitude: position.longitude,
+    );
+
+    await _firestore.collection('Users').document(user.email).setData(user.getUserData()).then((value){
+      UserApi userApi = UserApi.instance;
+      userApi.name = user.name;
+      userApi.address = user.address;
+      userApi.email = user.email;
+      userApi.phoneNo = user.phoneNo;
+      userApi.latitude = user.latitude;
+      userApi.longitude = user.longitude;
+
+      Navigator.pushNamed(context, HomeScreen.id);
+    }).catchError((error){
+      AlertBox().showErrorBox(context, error.message);
+    });
+
+    setState(() {
+      _loading = false;
+    });
   }
 
   void verifySuccess(){
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => HomeScreen(name: _name,address: _address,phoneNo: _phoneNo,),
-        )
-    );
+    addUserData();
   }
   void verifyFailed(String msg){
     AlertBox().showErrorBox(context, 'Verification Failed\n$msg');
@@ -130,7 +141,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
     bool isLocationEnabled = await Geolocator().isLocationServiceEnabled();
     if(isLocationEnabled){
-      Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
       print(position);
 
       getPlace(position);
@@ -162,6 +173,22 @@ class _DetailsScreenState extends State<DetailsScreen> {
       _addressController.text = address;
       isEnabled = false;
     });
+  }
+
+  void getCurrentUser() async{
+    try{
+      final user = await _auth.currentUser();
+      if(user != null){
+        _currentUser = user;
+      }
+    }catch(e){
+      print(e);
+    }
+  }
+  @override
+  void initState() {
+    super.initState();
+    getCurrentUser();
   }
 
   @override

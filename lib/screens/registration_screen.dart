@@ -2,11 +2,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:shutterhouse/components/alert_box.dart';
 import 'package:shutterhouse/components/clipped_header.dart';
 import 'package:shutterhouse/components/rounded_button.dart';
 import 'package:shutterhouse/components/text_input_decoration.dart';
-import 'package:shutterhouse/screens/home_screen.dart';
 import 'package:shutterhouse/utilities/constants.dart';
 
 import 'details_screen.dart';
@@ -22,25 +21,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   String _email,_password,_cnfpassword;
   bool e = false,p = false,cp = false,_loading = false;
 
-  void showErrorBox(context,String error){
-    Alert(
-      context: context,
-      type: AlertType.error,
-      title: "Error",
-      desc: error,
-      buttons: [
-        DialogButton(
-          child: Text(
-            "Okay",
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          onPressed: () => Navigator.pop(context),
-          color: kColorRed,
-          width: 120,
-        )
-      ],
-    ).show();
-  }
+  AlertBox alertBox = AlertBox();
 
   @override
   Widget build(BuildContext context) {
@@ -161,13 +142,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                   }
                                 }catch(e){
                                   switch(e.code){
-                                    case 'ERROR_WEAK_PASSWORD' :  showErrorBox(context,'Your password must be at least 6 characters long.');
+                                    case 'ERROR_WEAK_PASSWORD' :  alertBox.showErrorBox(context,'Your password must be at least 6 characters long.');
                                     break;
-                                    case 'ERROR_INVALID_EMAIL' : showErrorBox(context,'Please check the email address you entered.');
+                                    case 'ERROR_INVALID_EMAIL' : alertBox.showErrorBox(context,'Please check the email address you entered.');
                                     break;
-                                    case 'ERROR_EMAIL_ALREADY_IN_USE' : showErrorBox(context,'The email address you entered is already in use.');
+                                    case 'ERROR_EMAIL_ALREADY_IN_USE' : alertBox.showErrorBox(context,'The email address you entered is already in use.');
                                     break;
-                                    default : showErrorBox(context,'An error occurred while registering user. Please try again later.');
+                                    default : alertBox.showErrorBox(context,'An error occurred while registering user. Please try again later.');
                                   }
                                 }
                                 setState(() {
@@ -187,7 +168,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                     cp = true;
                                   });
                                 if(_cnfpassword != null && _cnfpassword != _password)
-                                  showErrorBox(context,'The confirmation password did not match with chosen password');
+                                  alertBox.showErrorBox(context,'The confirmation password did not match with chosen password');
                               }
                             },
                           ),
