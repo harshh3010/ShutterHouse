@@ -3,6 +3,7 @@ import 'package:shutterhouse/screens/details_screen.dart';
 import 'package:shutterhouse/screens/home_screen.dart';
 import 'package:shutterhouse/screens/login_screen.dart';
 import 'package:shutterhouse/screens/registration_screen.dart';
+import 'package:shutterhouse/screens/splash_screen.dart';
 import 'package:shutterhouse/screens/welcome_screen.dart';
 
 void main() => runApp(MyApp());
@@ -15,8 +16,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: WelcomeScreen.id,
+      initialRoute: SplashScreen.id,
       routes: {
+        SplashScreen.id : (context) => SplashScreen(),
         WelcomeScreen.id : (context) => WelcomeScreen(),
        RegistrationScreen.id : (context) => RegistrationScreen(),
         LoginScreen.id : (context) => LoginScreen(),
