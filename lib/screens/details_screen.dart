@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:shutterhouse/components/alert_box.dart';
 import 'package:shutterhouse/components/rounded_button.dart';
 import 'package:shutterhouse/components/text_input_decoration.dart';
 import 'package:shutterhouse/screens/home_screen.dart';
@@ -17,14 +19,17 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
 
   TextEditingController _codeController = TextEditingController();
+  TextEditingController _addressController = TextEditingController();
   String smsCode;
   String verificationId;
   String _phoneNo,_name;
   bool _loading = false;
   AuthCredential _credential;
   FirebaseAuth _auth = FirebaseAuth.instance;
+  bool isEnabled = true;
   FirebaseUser _currentUser;
   bool p = false,n = false,l = false;
+  String _address = "";
 
   @override
   void initState() {
@@ -43,34 +48,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
     }
   }
 
-  void showErrorBox(context,String error){
-    Alert(
-      context: context,
-      type: AlertType.error,
-      title: "Error",
-      desc: error,
-      buttons: [
-        DialogButton(
-          child: Text(
-            "Okay",
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          onPressed: () => Navigator.pop(context),
-          color: kColorRed,
-          width: 120,
-        )
-      ],
-    ).show();
-  }
-
   void verifySuccess(){
     Navigator.pushNamed(context,HomeScreen.id);
   }
-
   void verifyFailed(){
-    showErrorBox(context, 'Verification Failed');
+    AlertBox().showErrorBox(context, 'Verification Failed');
   }
-
   Future registerUser(String mobile, BuildContext context) async{
     _auth.verifyPhoneNumber(
         phoneNumber: '+91' + mobile,
@@ -83,7 +66,6 @@ class _DetailsScreenState extends State<DetailsScreen> {
           print(authException.message);
         },
         codeSent: (String verificationId, [int forceResendingToken]){
-          //show dialog to take input from the user
           showDialog(
               context: context,
               barrierDismissible: false,
@@ -130,12 +112,58 @@ class _DetailsScreenState extends State<DetailsScreen> {
     );
   }
 
+  void getCurrentLocation() async {
+    setState(() {
+      _loading = true;
+    });
+
+    bool isLocationEnabled = await Geolocator().isLocationServiceEnabled();
+    if(isLocationEnabled){
+      Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      print(position);
+
+      getPlace(position);
+
+    }else{
+      AlertBox().showErrorBox(context, 'Please turn on location services');
+    }
+
+    setState(() {
+      _loading = false;
+    });
+  }
+  void getPlace(Position position) async {
+    List<Placemark> newPlace = await Geolocator().placemarkFromCoordinates(position.latitude, position.longitude);
+
+    Placemark placeMark  = newPlace[0];
+    String name = placeMark.name;
+    String subLocality = placeMark.subLocality;
+    String locality = placeMark.locality;
+    String administrativeArea = placeMark.administrativeArea;
+    String postalCode = placeMark.postalCode;
+    String country = placeMark.country;
+    String address = "${name}, ${subLocality}, ${locality}, ${administrativeArea} ${postalCode}, ${country}";
+
+    print(address);
+
+    setState(() {
+      _address = address;
+      _addressController.text = address;
+      isEnabled = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       top: false,
       child: ModalProgressHUD(
         inAsyncCall: _loading,
+        color: Colors.white,
+        opacity: .5,
+        progressIndicator: CircularProgressIndicator(
+          valueColor: new AlwaysStoppedAnimation<Color>(kColorRed),
+        ),
         child: Scaffold(
           body: Column(
                                                                                                                                                                                                                                                                                                                                                                                                                    mainAxisAlignment: MainAxisAlignment.center,
@@ -184,9 +212,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 30.0),
                 child: TextField(
-                  onChanged: (value){
-                    // TODO : code
+                  enabled: isEnabled,
+                  onTap: (){
+                    getCurrentLocation();
                   },
+                  controller: _addressController,
                   decoration: textInputDecoration(color: kColorRed, hint: 'Enter address', showError: l,icon: Icons.location_on),
                 ),
               ),
@@ -195,7 +225,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 child: RoundedButton(
                   color: kColorRed,
                   onPressed: (){
-                    if(_phoneNo != null && _name != null){
+                    if(_phoneNo != null && _name != null && _address != ""){
                       registerUser(_phoneNo, context);
                     }else{
                       if(_phoneNo == null)
@@ -205,6 +235,10 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       if(_name == null)
                         setState(() {
                           n = true;
+                        });
+                      if(_address == "")
+                        setState(() {
+                          l = true;
                         });
                     }
                   },
@@ -217,4 +251,6 @@ class _DetailsScreenState extends State<DetailsScreen> {
       ),
     );
   }
+
+
 }
