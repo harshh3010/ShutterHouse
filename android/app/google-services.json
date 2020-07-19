@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "653045390670-skpanads8shnai1uso8d0ogckvcljvau.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.codebee.shutterhouse",
+            "certificate_hash": "0cbb7300ad449177697ca9aa1304939a35d9f475"
+          }
+        },
+        {
           "client_id": "653045390670-njio60rlbp8ogt63r0ssb8nmtqhc3qat.apps.googleusercontent.com",
           "client_type": 3
         }

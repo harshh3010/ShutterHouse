@@ -96,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 e = false;
                               });
                             },
-                            decoration: textInputDecoration(color: kColorRed, hint: 'Enter email address',icon : Icons.person,showError: e),
+                            decoration: textInputDecoration(color: kColorRed, hint: 'Enter email address',icon : Icons.mail,showError: e),
                             style: TextStyle(
                               fontFamily: 'Proxima Nova',
                             ),
