@@ -1,12 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:shutterhouse/components/alert_box.dart';
 import 'package:shutterhouse/components/clipped_header.dart';
 import 'package:shutterhouse/components/rounded_button.dart';
 import 'package:shutterhouse/components/text_input_decoration.dart';
+import 'package:shutterhouse/screens/details_screen.dart';
 import 'package:shutterhouse/screens/home_screen.dart';
 import 'package:shutterhouse/utilities/constants.dart';
+import 'package:shutterhouse/utilities/user_api.dart';
 
 
 class LoginScreen extends StatefulWidget {
@@ -20,25 +23,36 @@ class _LoginScreenState extends State<LoginScreen> {
   final _auth = FirebaseAuth.instance;
   String _email,_password;
   bool e = false,p = false,_loading = false;
+  UserApi userApi = UserApi.instance;
 
-  void showErrorBox(context,String error){
-    Alert(
-      context: context,
-      type: AlertType.error,
-      title: "Error",
-      desc: error,
-      buttons: [
-        DialogButton(
-          child: Text(
-            "Okay",
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          onPressed: () => Navigator.pop(context),
-          color: kColorRed,
-          width: 120,
-        )
-      ],
-    ).show();
+  AlertBox alertBox = AlertBox();
+
+  void checkUserData() async{
+
+    setState(() {
+      _loading = true;
+    });
+
+    final snapShot = await Firestore.instance
+        .collection('Users')
+        .document(_email)
+        .get();
+
+    if (snapShot == null || !snapShot.exists) {
+      Navigator.pushNamed(context, DetailsScreen.id);
+    }else{
+      userApi.name = snapShot.data['name'];
+      userApi.address = snapShot.data['address'];
+      userApi.email = snapShot.data['email'];
+      userApi.phoneNo = snapShot.data['phoneNo'];
+      userApi.latitude = snapShot.data['latitude'];
+      userApi.longitude = snapShot.data['longitude'];
+      Navigator.pushNamed(context, HomeScreen.id);
+    }
+
+    setState(() {
+      _loading = false;
+    });
   }
 
   @override
@@ -137,23 +151,23 @@ class _LoginScreenState extends State<LoginScreen> {
                                 try{
                                   final user = await _auth.signInWithEmailAndPassword(email: _email, password: _password);
                                   if(user != null){
-                                    Navigator.pushNamed(context,HomeScreen.id);
+                                    checkUserData();
                                   }
                                 }catch(e){
                                   switch(e.code){
-                                    case 'ERROR_WRONG_PASSWORD' :  showErrorBox(context,'Incorrect password');
+                                    case 'ERROR_WRONG_PASSWORD' :  alertBox.showErrorBox(context,'Incorrect password');
                                     break;
-                                    case 'ERROR_INVALID_EMAIL' : showErrorBox(context,'Please check the email address you entered.');
+                                    case 'ERROR_INVALID_EMAIL' : alertBox.showErrorBox(context,'Please check the email address you entered.');
                                     break;
-                                    case 'ERROR_USER_NOT_FOUND' : showErrorBox(context,'The entered email address is not registered.');
+                                    case 'ERROR_USER_NOT_FOUND' : alertBox.showErrorBox(context,'The entered email address is not registered.');
                                     break;
-                                    case 'ERROR_USER_DISABLED' : showErrorBox(context,'Your account has been blocked.');
+                                    case 'ERROR_USER_DISABLED' : alertBox.showErrorBox(context,'Your account has been blocked.');
                                     break;
-                                    case 'ERROR_TOO_MANY_REQUESTS' : showErrorBox(context,'There were too many login requests from this email, please try again later.');
+                                    case 'ERROR_TOO_MANY_REQUESTS' : alertBox.showErrorBox(context,'There were too many login requests from this email, please try again later.');
                                     break;
-                                    case 'ERROR_OPERATION_NOT_ALLOWED' : showErrorBox(context,'Your account is currently disabled.');
+                                    case 'ERROR_OPERATION_NOT_ALLOWED' : alertBox.showErrorBox(context,'Your account is currently disabled.');
                                     break;
-                                    default : showErrorBox(context,'An error occurred while registering user. Please try again later.');
+                                    default : alertBox.showErrorBox(context,'An error occurred while registering user. Please try again later.');
                                   }
                                 }
                                 setState(() {
