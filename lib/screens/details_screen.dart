@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shutterhouse/components/alert_box.dart';
 import 'package:shutterhouse/components/rounded_button.dart';
 import 'package:shutterhouse/components/text_input_decoration.dart';
@@ -49,10 +48,15 @@ class _DetailsScreenState extends State<DetailsScreen> {
   }
 
   void verifySuccess(){
-    Navigator.pushNamed(context,HomeScreen.id);
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HomeScreen(name: _name,address: _address,phoneNo: _phoneNo,),
+        )
+    );
   }
-  void verifyFailed(){
-    AlertBox().showErrorBox(context, 'Verification Failed');
+  void verifyFailed(String msg){
+    AlertBox().showErrorBox(context, 'Verification Failed\n$msg');
   }
   Future registerUser(String mobile, BuildContext context) async{
     _auth.verifyPhoneNumber(
@@ -62,7 +66,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
           verifySuccess();
         },
         verificationFailed: (AuthException authException){
-          verifyFailed();
+          verifyFailed(authException.message);
           print(authException.message);
         },
         codeSent: (String verificationId, [int forceResendingToken]){
@@ -86,6 +90,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     textColor: Colors.white,
                     color: kColorRed,
                     onPressed: () {
+                      setState(() {
+                        _loading = true;
+                      });
                       smsCode = _codeController.text.trim();
 
                       _credential = null;
@@ -96,7 +103,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
                         verifySuccess();
                       }).catchError((error) {
                         print(error.toString());
-                        verifyFailed();
+                        verifyFailed(error.message);
+                      });
+
+                      setState(() {
+                        _loading = false;
                       });
                     },
                   )
