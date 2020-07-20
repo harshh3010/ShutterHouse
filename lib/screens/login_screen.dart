@@ -39,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
         .get();
 
     if (snapShot == null || !snapShot.exists) {
-      Navigator.pushNamed(context, DetailsScreen.id);
+      Navigator.pushReplacementNamed(context, DetailsScreen.id);
     }else{
       userApi.name = snapShot.data['name'];
       userApi.address = snapShot.data['address'];
@@ -47,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
       userApi.phoneNo = snapShot.data['phoneNo'];
       userApi.latitude = snapShot.data['latitude'];
       userApi.longitude = snapShot.data['longitude'];
-      Navigator.pushNamed(context, HomeScreen.id);
+      Navigator.pushReplacementNamed(context, HomeScreen.id);
     }
 
     setState(() {

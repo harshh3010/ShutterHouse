@@ -39,7 +39,7 @@ class _SplashScreenState extends State<SplashScreen> {
       userApi.phoneNo = snapShot.data['phoneNo'];
       userApi.latitude = snapShot.data['latitude'];
       userApi.longitude = snapShot.data['longitude'];
-      Navigator.pushNamed(context, HomeScreen.id);
+      Navigator.pushReplacementNamed(context, HomeScreen.id);
     }
   }
 
@@ -51,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
         checkUserData();
       }else{
-        Navigator.pushNamed(context,WelcomeScreen.id);
+        Navigator.pushReplacementNamed(context,WelcomeScreen.id);
       }
     }catch(e){
       print(e);
