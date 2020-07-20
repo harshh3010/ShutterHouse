@@ -2,8 +2,13 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shutterhouse/components/user_profile_card.dart';
+import 'package:shutterhouse/components/number_label.dart';
+import 'package:shutterhouse/components/rent_schedule_card.dart';
+import 'package:shutterhouse/components/rents_button.dart';
+
 import 'package:shutterhouse/utilities/constants.dart';
+
+enum Rents { Schedule, History }
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -11,8 +16,20 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  Rents selectedButton = Rents.Schedule;
+
   @override
   Widget build(BuildContext context) {
+
+    Widget cardToDisplay;
+    if(selectedButton == Rents.Schedule){
+      cardToDisplay = RentScheduleCard();
+    }else{
+      cardToDisplay = Container(
+        color: kColorBlue,
+      );
+    }
+
     return Container(
       child: CustomScrollView(
         slivers: <Widget>[
@@ -21,96 +38,150 @@ class _ProfilePageState extends State<ProfilePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                UserProfileCard(
-                  name: 'Harsh Gyanchandani',
-                  dpUrl: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-                  city: 'Bhopal',
-                  country: 'India',
-                  rating: 4.5,
-                  rents: 10,
-                  reviews: 12,
+                Stack(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 30.0),
+                      child: Container(
+                        padding: EdgeInsets.fromLTRB(0, 10, 0, 80.0),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: kColorBlue,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.zero,
+                            topRight: Radius.zero,
+                            bottomLeft: Radius.circular(50.0),
+                            bottomRight: Radius.circular(50.0),
+                          ),
+                        ),
+                        child: Column(
+                          children: <Widget>[
+                            Container(
+                              width: 150,
+                              height: 150,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  image: NetworkImage('https://pluspng.com/img-png/nikon-png-black-nikon-black-nikon-camera-png-image-260.jpg'), //TODO : change
+                                  fit: BoxFit.cover,
+                                ),
+                                border: new Border.all(
+                                  width: 5.0,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            Text(
+                              'Harsh Gyanchandani', // TODO: change
+                              style: TextStyle(
+                                fontSize: 24,
+                                color: Colors.white,
+                                fontFamily: 'Proxima Nova',
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Icon(
+                                  Icons.location_on,
+                                  color: Colors.blueGrey.shade400,
+                                  size: 16.0,
+                                ),
+                                Text(
+                                  'Bhopal, India', //TODO: change
+                                  style: TextStyle(
+                                    fontFamily: 'Proxima Nova',
+                                    color: Colors.blueGrey.shade400,
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.w900,
+                                  ),
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 36,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                NumberLabel(
+                                  value: '⭐ 4.7', // TODO: change
+                                  label: 'RATING',
+                                ),
+                                NumberLabel(
+                                  value: '15',
+                                  label: 'REVIEWS',
+                                ),
+                                NumberLabel(
+                                  value: '27',
+                                  label: 'RENTS',
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 10,
+                      left: 0,
+                      child: Padding(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 0, horizontal: 30.0),
+                        child: Container(
+                            width: MediaQuery.of(context).size.width - 60.0,
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(30.0)),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    blurRadius: 5.0,
+                                  ),
+                                ]),
+                            child: Row(
+                              children: <Widget>[
+                                RentsButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      selectedButton = Rents.Schedule;
+                                    });
+                                  },
+                                  label: 'Schedule',
+                                  isActive: selectedButton == Rents.Schedule,
+                                ),
+                                SizedBox(
+                                  width: 8,
+                                ),
+                                RentsButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      selectedButton = Rents.History;
+                                    });
+                                  },
+                                  label: 'History',
+                                  isActive: selectedButton == Rents.History,
+                                ),
+                              ],
+                            )),
+                      ),
+                    ),
+                  ],
                 ),
                 SizedBox(
                   height: 15,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 30),
-                  child: Text(
-                    'April, 25',
-                    style: TextStyle(
-                      color: Colors.grey.shade800,
-                      fontSize: 30,
-                      fontFamily: 'Proxima Nova',
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 10),
-                    child: Container(
-                      padding: EdgeInsets.all(24),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10.0),
-                          boxShadow: [ BoxShadow(
-                            color: Colors.black.withOpacity(0.08),
-                            blurRadius: 3.0,
-                          ),]
-                      ),
-                      child: Column(
-                        children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text(
-                                'Name of the product',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontFamily: 'Proxima Nova',
-                                  fontWeight: FontWeight.w900,
-                                  color: Colors.grey.shade800,
-                                ),
-                              ),
-                              Icon(
-                                Icons.more_vert,
-                                color: Colors.grey.shade800,
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          Row(
-                            children: <Widget>[
-                              Expanded(
-                                flex: 2,
-                                child: Image(
-                                  image: NetworkImage('https://pluspng.com/img-png/nikon-png-black-nikon-black-nikon-camera-png-image-260.jpg'),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 3,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Text(
-                                    'April,25 - April,28',
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontFamily: 'Proxima Nova',
-                                      fontWeight: FontWeight.w900,
-                                      color: Colors.grey.shade400,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                )
+                cardToDisplay,
               ],
             ),
           ),
@@ -119,3 +190,4 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 }
+
