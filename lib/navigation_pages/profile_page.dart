@@ -2,8 +2,9 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shutterhouse/components/history_card.dart';
 import 'package:shutterhouse/components/number_label.dart';
-import 'package:shutterhouse/components/rent_schedule_card.dart';
+import 'package:shutterhouse/components/schedule_card.dart';
 import 'package:shutterhouse/components/rents_button.dart';
 
 import 'package:shutterhouse/utilities/constants.dart';
@@ -23,11 +24,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
     Widget cardToDisplay;
     if(selectedButton == Rents.Schedule){
-      cardToDisplay = RentScheduleCard();
+      cardToDisplay = ScheduleCard();
     }else{
-      cardToDisplay = Container(
-        color: kColorBlue,
-      );
+      cardToDisplay = HistoryCard();
     }
 
     return Container(
