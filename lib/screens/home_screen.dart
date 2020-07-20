@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:shutterhouse/components/best_offer_card.dart';
-import 'package:shutterhouse/components/category_card.dart';
+import 'package:shutterhouse/navigation_pages/profile_page.dart';
 import 'package:shutterhouse/navigation_pages/search_page.dart';
 import 'package:shutterhouse/utilities/constants.dart';
 import 'package:shutterhouse/utilities/user_api.dart';
@@ -18,6 +17,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   UserApi userApi = UserApi.instance;
   int _currentIndex = 0;
+  Color appBarColor = Colors.white;
+  Color appBarIconColor = Colors.grey.shade800;
 
   @override
   Widget build(BuildContext context) {
@@ -25,16 +26,20 @@ class _HomeScreenState extends State<HomeScreen> {
     switch(_currentIndex){
       case 0:
         displayPage = SearchPage();
+        appBarColor = Colors.white;
+       appBarIconColor = Colors.grey.shade800;
         break;
       case 1:
-        displayPage = Container(
-          color: Colors.blue,
-        );
+        displayPage = ProfilePage();
+        appBarColor = kColorBlue;
+        appBarIconColor = Colors.white;
         break;
       case 2:
         displayPage = Container(
           color: Colors.red,
         );
+        appBarColor = Colors.white;
+        appBarIconColor = Colors.grey.shade800;
         break;
     }
     return SafeArea(
@@ -43,12 +48,12 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.white,
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: Colors.white,
+          backgroundColor: appBarColor,
           leading: Padding(
             padding: const EdgeInsets.all(24.0),
             child: Icon(
               Icons.more_vert,
-              color: Colors.grey.shade800,
+              color: appBarIconColor,
             ),
           ),
           actions: <Widget>[
@@ -56,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.all(24.0),
               child: Icon(
                 Icons.shopping_cart,
-                color: Colors.grey.shade800,
+                color: appBarIconColor,
               ),
             ),
           ],
