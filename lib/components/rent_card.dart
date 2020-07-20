@@ -15,7 +15,7 @@ class RentCard extends StatelessWidget {
           padding:
           const EdgeInsets.symmetric(vertical: 0, horizontal: 30),
           child: Text(
-            '${startMonth}, $startDay',
+            '$startMonth, $startDay',
             style: TextStyle(
               color: Colors.grey.shade800,
               fontSize: 30,
@@ -71,7 +71,7 @@ class RentCard extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Text(
-                        '${startMonth},${startDay} - ${endMonth},${endDay}',
+                        '$startMonth,$startDay - $endMonth,$endDay',
                         style: TextStyle(
                           fontSize: 15,
                           fontFamily: 'Proxima Nova',

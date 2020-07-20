@@ -24,43 +24,38 @@ class BestOfferCard extends StatelessWidget {
               ),
               child: Row(
                 children: <Widget>[
-                  Expanded(
-                    flex: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Image(
-                        image: NetworkImage(url),
-                      ),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Image(
+                      image: NetworkImage(url),
+                      width: 100,
                     ),
                   ),
-                  Expanded(
-                    flex: 3,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            name,
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontFamily: 'Proxima Nova',
-                              fontWeight: FontWeight.w900,
-                              color: Colors.grey.shade800,
-                            ),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          name,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: 'Proxima Nova',
+                            fontWeight: FontWeight.w900,
+                            color: Colors.grey.shade800,
                           ),
-                          Text(
-                            'Rs. $cost',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontFamily: 'Proxima Nova',
-                              fontWeight: FontWeight.w900,
-                              color: Colors.grey.shade400,
-                            ),
+                        ),
+                        Text(
+                          'Rs. $cost',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontFamily: 'Proxima Nova',
+                            fontWeight: FontWeight.w900,
+                            color: Colors.grey.shade400,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   )
                 ],
