@@ -1,4 +1,7 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shutterhouse/screens/details_screen.dart';
 import 'package:shutterhouse/screens/home_screen.dart';
 import 'package:shutterhouse/screens/login_screen.dart';
@@ -7,7 +10,16 @@ import 'package:shutterhouse/screens/splash_screen.dart';
 import 'package:shutterhouse/screens/welcome_screen.dart';
 import 'package:shutterhouse/utilities/constants.dart';
 
-void main() => runApp(MyApp());
+void main(){
+  SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        ),
+  );
+  runApp(MyApp());
+
+}
 
 class MyApp extends StatelessWidget {
   @override

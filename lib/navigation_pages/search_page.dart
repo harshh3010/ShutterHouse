@@ -1,10 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:shutterhouse/components/best_offer_card.dart';
 import 'package:shutterhouse/components/category_card.dart';
 import 'package:shutterhouse/utilities/constants.dart';
-import 'package:shutterhouse/utilities/user_api.dart';
 
 class SearchPage extends StatefulWidget {
   @override

@@ -1,5 +1,8 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shutterhouse/navigation_pages/profile_page.dart';
 import 'package:shutterhouse/navigation_pages/search_page.dart';
@@ -10,6 +13,8 @@ class HomeScreen extends StatefulWidget {
   static final String id = 'home_screen';
   @override
   _HomeScreenState createState() => _HomeScreenState();
+
+
 
 }
 
@@ -22,6 +27,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+      ),
+    );
+
     Widget displayPage;
     switch(_currentIndex){
       case 0:
