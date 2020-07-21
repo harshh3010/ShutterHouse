@@ -12,6 +12,11 @@ class UserApi {
   double _longitude;
   String _email;
 
+  String _dpURL;
+  double _rating;
+  int _rents;
+  int _reviews;
+
   String get name => _name;
 
   set name(String value) {
@@ -46,6 +51,30 @@ class UserApi {
 
   set address(String value) {
     _address = value;
+  }
+
+  int get reviews => _reviews;
+
+  set reviews(int value) {
+    _reviews = value;
+  }
+
+  int get rents => _rents;
+
+  set rents(int value) {
+    _rents = value;
+  }
+
+  double get rating => _rating;
+
+  set rating(double value) {
+    _rating = value;
+  }
+
+  String get dpURL => _dpURL;
+
+  set dpURL(String value) {
+    _dpURL = value;
   }
 
 

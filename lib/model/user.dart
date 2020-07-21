@@ -9,14 +9,15 @@ class User{
   double longitude;
   String email;
 
-  User({
-    this.name,
-    this.address,
-    this.latitude,
-    this.longitude,
-    this.phoneNo,
-    this.email,
-  });
+  String dpURL;
+  double rating;
+  int rents;
+  int reviews;
+
+
+  User({this.name, this.address, this.phoneNo, this.latitude,
+      this.longitude, this.email, this.dpURL, this.rating, this.rents,
+      this.reviews});
 
   Map<String,Object> getUserData(){
     return {
@@ -26,6 +27,10 @@ class User{
       'latitude' : this.latitude,
       'longitude' : this.longitude,
       'email' : this.email,
+      'dpUrl' : this.dpURL,
+      'rating' : this.rating,
+      'rents' : this.rents,
+      'reviews' : this.reviews,
     };
   }
 

@@ -8,6 +8,7 @@ import 'package:shutterhouse/components/schedule_card.dart';
 import 'package:shutterhouse/components/rents_button.dart';
 
 import 'package:shutterhouse/utilities/constants.dart';
+import 'package:shutterhouse/utilities/user_api.dart';
 
 enum Rents { Schedule, History }
 
@@ -17,6 +18,8 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+
+  UserApi userApi = UserApi.instance;
   Rents selectedButton = Rents.Schedule;
 
   @override
@@ -28,6 +31,8 @@ class _ProfilePageState extends State<ProfilePage> {
     }else{
       cardToDisplay = HistoryCard();
     }
+
+    List<String> _address = (userApi.address).split(',').toList();
 
     return Container(
       child: CustomScrollView(
@@ -62,7 +67,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 color: Colors.white,
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
-                                  image: NetworkImage('https://pluspng.com/img-png/nikon-png-black-nikon-black-nikon-camera-png-image-260.jpg'), //TODO : change
+                                  image: NetworkImage(userApi.dpURL),
                                   fit: BoxFit.cover,
                                 ),
                                 border: new Border.all(
@@ -75,7 +80,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               height: 15,
                             ),
                             Text(
-                              'Harsh Gyanchandani', // TODO: change
+                              userApi.name, // TODO: change
                               style: TextStyle(
                                 fontSize: 24,
                                 color: Colors.white,
@@ -95,7 +100,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   size: 16.0,
                                 ),
                                 Text(
-                                  'Bhopal, India', //TODO: change
+                                  '${_address[2]}, ${_address[4]}', //TODO: change
                                   style: TextStyle(
                                     fontFamily: 'Proxima Nova',
                                     color: Colors.blueGrey.shade400,
@@ -112,15 +117,15 @@ class _ProfilePageState extends State<ProfilePage> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
                                 NumberLabel(
-                                  value: '⭐ 4.7', // TODO: change
+                                  value: '⭐ ${userApi.rating}', // TODO: change
                                   label: 'RATING',
                                 ),
                                 NumberLabel(
-                                  value: '15',
+                                  value: '${userApi.reviews}',
                                   label: 'REVIEWS',
                                 ),
                                 NumberLabel(
-                                  value: '27',
+                                  value: '${userApi.rents}',
                                   label: 'RENTS',
                                 ),
                               ],
