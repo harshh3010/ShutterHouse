@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:shutterhouse/components/alert_box.dart';
 import 'package:shutterhouse/components/rounded_button.dart';
@@ -30,10 +34,32 @@ class _DetailsScreenState extends State<DetailsScreen> {
   bool p = false,n = false,l = false,isEnabled = true,_loading = false;
   Position position;
 
-  void addUserData() async {
-    setState(() {
-      _loading = true;
+  File _image;
+  final picker = ImagePicker();
+  String _uploadedFileURL;
+
+  Future chooseFile() async {
+    await ImagePicker.pickImage(source: ImageSource.gallery).then((image) {
+      setState(() {
+        _image = image;
+      });
     });
+  }
+  Future uploadFile() async {
+    StorageReference storageReference = FirebaseStorage.instance
+        .ref()
+        .child('ProfilePictures/${_currentUser.email}/profilepic');
+    StorageUploadTask uploadTask = storageReference.putFile(_image);
+    await uploadTask.onComplete;
+    print('File Uploaded');
+    storageReference.getDownloadURL().then((fileURL) {
+      setState(() {
+        _uploadedFileURL = fileURL;
+      });
+    });
+  }
+
+  void addUserData() async {
 
     User user = User(
       name: _name,
@@ -42,6 +68,10 @@ class _DetailsScreenState extends State<DetailsScreen> {
       email: _currentUser.email,
       latitude: position.latitude,
       longitude: position.longitude,
+      dpURL: _uploadedFileURL,
+      rents: 0,
+      reviews: 0,
+      rating: 0,
     );
 
     await _firestore.collection('Users').document(user.email).setData(user.getUserData()).then((value){
@@ -52,14 +82,14 @@ class _DetailsScreenState extends State<DetailsScreen> {
       userApi.phoneNo = user.phoneNo;
       userApi.latitude = user.latitude;
       userApi.longitude = user.longitude;
+      userApi.dpURL = user.dpURL;
+      userApi.rents = user.rents;
+      userApi.reviews = user.reviews;
+      userApi.rating = user.rating;
 
       Navigator.pushNamed(context, HomeScreen.id);
     }).catchError((error){
       AlertBox().showErrorBox(context, error.message);
-    });
-
-    setState(() {
-      _loading = false;
     });
   }
 
@@ -203,87 +233,137 @@ class _DetailsScreenState extends State<DetailsScreen> {
           valueColor: new AlwaysStoppedAnimation<Color>(kColorRed),
         ),
         child: Scaffold(
-          body: Column(
-                                                                                                                                                                                                                                                                                                                                                                                                                   mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 40.0),
-                child: Text(
-                    'Tell us about you',
-                  style: TextStyle(
-                    fontFamily: 'Proxima Nova',
-                    fontSize: 24,
-                    color: kColorRed,
-                    fontWeight: FontWeight.bold,
+          body: Center(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    height: 50.0,
                   ),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 40.0),
+                    child: Text(
+                      'Tell us about you',
+                      style: TextStyle(
+                        fontFamily: 'Proxima Nova',
+                        fontSize: 24,
+                        color: kColorRed,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 25.0,
+                  ),
+                  GestureDetector(
+                    onTap: (){
+                     chooseFile();
+                    },
+                    child: Container(
+                      width: 150,
+                      height: 150,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          image: _image == null
+                              ? AssetImage('images/add-user.png',)
+                              : FileImage(_image),
+                          fit: BoxFit.cover,
+                        ),
+                        border: new Border.all(
+                          width: 5.0,
+                          color: kColorRed,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 25.0,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 30.0),
+                    child: TextField(
+                      onChanged: (value){
+                        _name = value;
+                      },
+                      decoration: textInputDecoration(color: kColorRed, hint: 'Enter full name', showError: n,icon: Icons.person),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15.0,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 30.0),
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      onChanged: (value){
+                        _phoneNo = value;
+                      },
+                      decoration: textInputDecoration(color: kColorRed, hint: 'Enter contact number', showError: p,icon: Icons.phone),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15.0,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 30.0),
+                    child: TextField(
+                      enabled: isEnabled,
+                      onTap: (){
+                        getCurrentLocation();
+                      },
+                      controller: _addressController,
+                      decoration: textInputDecoration(color: kColorRed, hint: 'Enter address', showError: l,icon: Icons.location_on),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(30.0),
+                    child: Container(
+                      width: double.infinity,
+                      child: RoundedButton(
+                        color: kColorRed,
+                        onPressed: () async {
+
+                          setState(() {
+                            _loading = true;
+                          });
+
+                          if(_image != null){
+                            await uploadFile();
+                          }else{
+                            _uploadedFileURL = 'gs://shutter-house-59213.appspot.com/avatar.png';
+                          }
+
+                          if(_phoneNo != null && _name != null && _address != ""){
+                            registerUser(_phoneNo, context);
+                          }else{
+                            if(_phoneNo == null)
+                              setState(() {
+                                p = true;
+                              });
+                            if(_name == null)
+                              setState(() {
+                                n = true;
+                              });
+                            if(_address == "")
+                              setState(() {
+                                l = true;
+                              });
+                          }
+
+                          setState(() {
+                            _loading = false;
+                          });
+                        },
+                        text: 'Continue',
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              SizedBox(
-                height: 25.0,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 30.0),
-                child: TextField(
-                  onChanged: (value){
-                    _name = value;
-                  },
-                  decoration: textInputDecoration(color: kColorRed, hint: 'Enter full name', showError: n,icon: Icons.person),
-                ),
-              ),
-              SizedBox(
-                height: 15.0,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 30.0),
-                child: TextField(
-                  keyboardType: TextInputType.number,
-                  onChanged: (value){
-                    _phoneNo = value;
-                  },
-                  decoration: textInputDecoration(color: kColorRed, hint: 'Enter contact number', showError: p,icon: Icons.phone),
-                ),
-              ),
-              SizedBox(
-                height: 15.0,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 30.0),
-                child: TextField(
-                  enabled: isEnabled,
-                  onTap: (){
-                    getCurrentLocation();
-                  },
-                  controller: _addressController,
-                  decoration: textInputDecoration(color: kColorRed, hint: 'Enter address', showError: l,icon: Icons.location_on),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(30.0),
-                child: RoundedButton(
-                  color: kColorRed,
-                  onPressed: (){
-                    if(_phoneNo != null && _name != null && _address != ""){
-                      registerUser(_phoneNo, context);
-                    }else{
-                      if(_phoneNo == null)
-                        setState(() {
-                          p = true;
-                        });
-                      if(_name == null)
-                        setState(() {
-                          n = true;
-                        });
-                      if(_address == "")
-                        setState(() {
-                          l = true;
-                        });
-                    }
-                  },
-                  text: 'Continue',
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),

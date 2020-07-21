@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:shutterhouse/components/best_offer_card.dart';
 import 'package:shutterhouse/components/category_card.dart';
 import 'package:shutterhouse/utilities/constants.dart';
+import 'package:shutterhouse/utilities/user_api.dart';
 
 class SearchPage extends StatefulWidget {
   @override
@@ -9,6 +12,7 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -107,6 +111,7 @@ class _SearchPageState extends State<SearchPage> {
                           child: GestureDetector(
                             onTap: (){
                               //TODO : code
+
                             },
                             child: Icon(
                               Icons.tune,
