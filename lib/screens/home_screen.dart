@@ -1,12 +1,15 @@
 import 'dart:ui';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:shutterhouse/components/menu_option.dart';
 import 'package:shutterhouse/navigation_pages/profile_page.dart';
 import 'package:shutterhouse/navigation_pages/search_page.dart';
+import 'package:shutterhouse/screens/welcome_screen.dart';
 import 'package:shutterhouse/utilities/constants.dart';
 import 'package:shutterhouse/utilities/user_api.dart';
 
@@ -21,6 +24,13 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
   Color appBarColor = Colors.white;
   Color appBarIconColor = Colors.grey.shade800;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  bool _loading = false;
+
+  Future<void> signOut() async{
+    await _auth.signOut();
+    Navigator.pushReplacementNamed(context, WelcomeScreen.id);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,9 +71,16 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ],
-        onSelected: (selectedOption){
+        onSelected: (selectedOption) async{
           switch(selectedOption){
-            case 'item_logout': print('Logout');
+            case 'item_logout':
+              setState(() {
+                _loading = true;
+              });
+              await signOut();
+              setState(() {
+                _loading = false;
+              });
             break;
             case 'item_edit_profile': print('Edit Profile');
             break;
@@ -103,83 +120,91 @@ class _HomeScreenState extends State<HomeScreen> {
         appBarIconColor = Colors.grey.shade800;
         break;
     }
-    return SafeArea(
-      top: false,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: appBarColor,
-          leading: showOptions(),
-          actions: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Icon(
-                Icons.shopping_cart,
-                color: appBarIconColor,
-              ),
-            ),
-          ],
-        ),
-        body: displayPage,
-        bottomNavigationBar: Padding(
-          padding: EdgeInsets.fromLTRB(24.0, 0, 24, 24),
-          child: BottomNavigationBar(
-            currentIndex: _currentIndex,
-            onTap: (newIndex) {
-              setState(() {
-                _currentIndex = newIndex;
-              });
-            },
-            items: [
-              BottomNavigationBarItem(
-                icon: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Icon(
-                    Icons.search,
-                  ),
-                ),
-                title: Text(
-                  'SEARCH',
-                  style: TextStyle(
-                    fontFamily: 'Proxima Nova',
-                  ),
-                ),
-              ),
-              BottomNavigationBarItem(
-                icon: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Icon(
-                    Icons.person_outline,
-                  ),
-                ),
-                title: Text(
-                  'PROFILE',
-                  style: TextStyle(
-                    fontFamily: 'Proxima Nova',
-                  ),
-                ),
-              ),
-              BottomNavigationBarItem(
-                icon: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Icon(
-                    Icons.chat_bubble_outline,
-                  ),
-                ),
-                title: Text(
-                  'CHAT',
-                  style: TextStyle(
-                    fontFamily: 'Proxima Nova',
-                  ),
+    return ModalProgressHUD(
+      inAsyncCall: _loading,
+      color: Colors.white,
+      opacity: .5,
+      progressIndicator: CircularProgressIndicator(
+        valueColor: new AlwaysStoppedAnimation<Color>(kColorRed),
+      ),
+      child: SafeArea(
+        top: false,
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            elevation: 0,
+            backgroundColor: appBarColor,
+            leading: showOptions(),
+            actions: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Icon(
+                  Icons.shopping_cart,
+                  color: appBarIconColor,
                 ),
               ),
             ],
-            backgroundColor: Colors.white,
-            elevation: 0,
-            fixedColor: kColorRed,
-            unselectedItemColor: Colors.grey.shade800,
-            iconSize: 30,
+          ),
+          body: displayPage,
+          bottomNavigationBar: Padding(
+            padding: EdgeInsets.fromLTRB(24.0, 0, 24, 24),
+            child: BottomNavigationBar(
+              currentIndex: _currentIndex,
+              onTap: (newIndex) {
+                setState(() {
+                  _currentIndex = newIndex;
+                });
+              },
+              items: [
+                BottomNavigationBarItem(
+                  icon: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.search,
+                    ),
+                  ),
+                  title: Text(
+                    'SEARCH',
+                    style: TextStyle(
+                      fontFamily: 'Proxima Nova',
+                    ),
+                  ),
+                ),
+                BottomNavigationBarItem(
+                  icon: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.person_outline,
+                    ),
+                  ),
+                  title: Text(
+                    'PROFILE',
+                    style: TextStyle(
+                      fontFamily: 'Proxima Nova',
+                    ),
+                  ),
+                ),
+                BottomNavigationBarItem(
+                  icon: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.chat_bubble_outline,
+                    ),
+                  ),
+                  title: Text(
+                    'CHAT',
+                    style: TextStyle(
+                      fontFamily: 'Proxima Nova',
+                    ),
+                  ),
+                ),
+              ],
+              backgroundColor: Colors.white,
+              elevation: 0,
+              fixedColor: kColorRed,
+              unselectedItemColor: Colors.grey.shade800,
+              iconSize: 30,
+            ),
           ),
         ),
       ),
