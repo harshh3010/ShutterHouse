@@ -329,13 +329,14 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             _loading = true;
                           });
 
-                          if(_image != null){
-                            await uploadFile();
-                          }else{
-                            _uploadedFileURL = 'gs://shutter-house-59213.appspot.com/avatar.png';
-                          }
-
                           if(_phoneNo != null && _name != null && _address != ""){
+
+                            if(_image != null){
+                              await uploadFile();
+                            }else{
+                              _uploadedFileURL = 'gs://shutter-house-59213.appspot.com/avatar.png';
+                            }
+
                             registerUser(_phoneNo, context);
                           }else{
                             if(_phoneNo == null)

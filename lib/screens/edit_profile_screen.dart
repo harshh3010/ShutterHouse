@@ -209,9 +209,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
 
-    _addressController.text = userApi.address;
-    _nameController.text = userApi.name;
-    _phoneController.text = userApi.phoneNo;
+    _addressController.text = _address =  userApi.address;
+    _nameController.text = _name = userApi.name;
+    _phoneController.text = _phoneNo = userApi.phoneNo;
 
     return SafeArea(
       top: false,
@@ -349,18 +349,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             _loading = true;
                           });
 
-                          if(_image != null){
-                            await uploadFile();
-                          }else{
-                            _uploadedFileURL = 'gs://shutter-house-59213.appspot.com/avatar.png';
-                          }
-
                           if(_phoneNo != null && _name != null && _address != ""){
-                            if(_phoneNo == userApi.phoneNo){
 
+                            if(_image != null){
+                              await uploadFile();
                             }else{
-                              updatePhoneNumber();
+                              _uploadedFileURL = 'gs://shutter-house-59213.appspot.com/avatar.png';
                             }
+
+                            updatePhoneNumber();
                           }else{
                             if(_phoneNo == null)
                               setState(() {
