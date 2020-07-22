@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class CategoryCard extends StatelessWidget {
 
-  final String category,url;
-  CategoryCard({@required this.category,@required this.url});
+  final String category,imagePath;
+  CategoryCard({@required this.category,@required this.imagePath});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class CategoryCard extends StatelessWidget {
             ),
             child: Center(
               child: Image(
-                image: NetworkImage(url),
+                image: AssetImage(imagePath),
                 width: 100,
               ),
             ),

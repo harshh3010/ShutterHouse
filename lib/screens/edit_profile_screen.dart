@@ -43,6 +43,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   String _uploadedFileURL;
 
   Future chooseFile() async {
+    // ignore: deprecated_member_use
     await ImagePicker.pickImage(source: ImageSource.gallery).then((image) {
       setState(() {
         _image = image;
@@ -212,6 +213,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _addressController.text = _address =  userApi.address;
     _nameController.text = _name = userApi.name;
     _phoneController.text = _phoneNo = userApi.phoneNo;
+    _uploadedFileURL = userApi.dpURL;
 
     return SafeArea(
       top: false,
@@ -354,7 +356,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             if(_image != null){
                               await uploadFile();
                             }else{
-                              _uploadedFileURL = 'gs://shutter-house-59213.appspot.com/avatar.png';
+                              _uploadedFileURL = kInitialDpUrl;
                             }
 
                             updatePhoneNumber();
