@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shutterhouse/screens/details_screen.dart';
+import 'package:shutterhouse/screens/edit_profile_screen.dart';
 import 'package:shutterhouse/screens/home_screen.dart';
 import 'package:shutterhouse/screens/login_screen.dart';
 import 'package:shutterhouse/screens/registration_screen.dart';
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
         LoginScreen.id : (context) => LoginScreen(),
         HomeScreen.id : (context) => HomeScreen(),
         DetailsScreen.id : (context) => DetailsScreen(),
+        EditProfileScreen.id : (context) => EditProfileScreen(),
       },
     );
   }

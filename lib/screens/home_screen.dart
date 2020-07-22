@@ -9,6 +9,7 @@ import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:shutterhouse/components/menu_option.dart';
 import 'package:shutterhouse/navigation_pages/profile_page.dart';
 import 'package:shutterhouse/navigation_pages/search_page.dart';
+import 'package:shutterhouse/screens/edit_profile_screen.dart';
 import 'package:shutterhouse/screens/welcome_screen.dart';
 import 'package:shutterhouse/utilities/constants.dart';
 import 'package:shutterhouse/utilities/user_api.dart';
@@ -82,7 +83,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 _loading = false;
               });
             break;
-            case 'item_edit_profile': print('Edit Profile');
+            case 'item_edit_profile':
+              Navigator.pushNamed(context, EditProfileScreen.id);
             break;
             case 'item_help': print('Help');
             break;

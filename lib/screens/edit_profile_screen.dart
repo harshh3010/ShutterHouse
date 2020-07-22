@@ -8,33 +8,37 @@ import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:shutterhouse/components/alert_box.dart';
+import 'package:shutterhouse/components/menu_option.dart';
 import 'package:shutterhouse/components/rounded_button.dart';
 import 'package:shutterhouse/components/text_input_decoration.dart';
 import 'package:shutterhouse/model/user.dart';
-import 'package:shutterhouse/screens/home_screen.dart';
 import 'package:shutterhouse/utilities/constants.dart';
 import 'package:shutterhouse/utilities/user_api.dart';
 
-class DetailsScreen extends StatefulWidget {
-  static final String id = 'details_screen';
+class EditProfileScreen extends StatefulWidget {
   @override
-  _DetailsScreenState createState() => _DetailsScreenState();
+  _EditProfileScreenState createState() => _EditProfileScreenState();
+
+  static final String id = 'edit_profile_screen';
 }
 
-class _DetailsScreenState extends State<DetailsScreen> {
+class _EditProfileScreenState extends State<EditProfileScreen> {
+
+  bool p = false,n = false,l = false,isEnabled = true,_loading = false;
+  final UserApi userApi = UserApi.instance;
+  Position position;
+  String _address = "",_phoneNo,_name,smsCode,verificationId;
+  TextEditingController _addressController = TextEditingController();
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _phoneController = TextEditingController();
+  TextEditingController _codeController = TextEditingController();
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Firestore _firestore = Firestore.instance;
-  FirebaseUser _currentUser;
   AuthCredential _credential;
 
-  TextEditingController _codeController = TextEditingController();
-  TextEditingController _addressController = TextEditingController();
-  String _phoneNo,_name,smsCode,verificationId,_address = "";
-  bool p = false,n = false,l = false,isEnabled = true,_loading = false;
-  Position position;
-
-  File _image;
+  bool imagePicked = false;
+  File _image ;
   final picker = ImagePicker();
   String _uploadedFileURL;
 
@@ -48,7 +52,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
   Future uploadFile() async {
     StorageReference storageReference = FirebaseStorage.instance
         .ref()
-        .child('ProfilePictures/${_currentUser.email}/profilepic');
+        .child('ProfilePictures/${userApi.email}/profilepic');
     StorageUploadTask uploadTask = storageReference.putFile(_image);
     await uploadTask.onComplete;
     print('File Uploaded');
@@ -59,18 +63,19 @@ class _DetailsScreenState extends State<DetailsScreen> {
     });
   }
 
-  void addUserData() async {
+  void updateUserData() async {
+
     User user = User(
       name: _name,
       phoneNo: _phoneNo,
       address: _address,
-      email: _currentUser.email,
-      latitude: position.latitude,
-      longitude: position.longitude,
-      dpURL: _uploadedFileURL,
-      rents: 0,
-      reviews: 0,
-      rating: 0,
+      email: userApi.email,
+      latitude: userApi.latitude,
+      longitude: userApi.longitude,
+      dpURL:  _uploadedFileURL,
+      rents: userApi.rents,
+      reviews: userApi.reviews,
+      rating: userApi.rating,
     );
 
     await _firestore.collection('Users').document(user.email).setData(user.getUserData()).then((value){
@@ -86,81 +91,10 @@ class _DetailsScreenState extends State<DetailsScreen> {
       userApi.reviews = user.reviews;
       userApi.rating = user.rating;
 
-      Navigator.pushNamed(context, HomeScreen.id);
+      Navigator.pop(context);
     }).catchError((error){
       AlertBox().showErrorBox(context, error.message);
     });
-  }
-
-  void verifySuccess(){
-    addUserData();
-  }
-  void verifyFailed(String msg){
-    AlertBox().showErrorBox(context, 'Verification Failed\n$msg');
-  }
-  Future registerUser(String mobile, BuildContext context) async{
-    _auth.verifyPhoneNumber(
-      phoneNumber: '+91' + mobile,
-      timeout: Duration(seconds: 120),
-      verificationCompleted: (AuthCredential authCredential){
-        verifySuccess();
-      },
-      verificationFailed: (AuthException authException){
-        verifyFailed(authException.message);
-        print(authException.message);
-      },
-      codeSent: (String verificationId, [int forceResendingToken]){
-        showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (context) => AlertDialog(
-              title: Text("Enter OTP"),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Text('We have sent you an OTP(expires in 2 minutes) on entered phone number, please verify to continue.'),
-                  TextField(
-                    controller: _codeController,
-                  ),
-                ],
-              ),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text("Done"),
-                  textColor: Colors.white,
-                  color: kColorRed,
-                  onPressed: () {
-                    setState(() {
-                      _loading = true;
-                    });
-                    smsCode = _codeController.text.trim();
-
-                    _credential = null;
-                    _credential = PhoneAuthProvider.getCredential(verificationId: verificationId, smsCode: smsCode);
-
-                    _currentUser.linkWithCredential(_credential).then((user) {
-                      Navigator.pop(context);
-                      verifySuccess();
-                    }).catchError((error) {
-                      print(error.toString());
-                      verifyFailed(error.message);
-                    });
-
-                    setState(() {
-                      _loading = false;
-                    });
-                  },
-                )
-              ],
-            )
-        );
-      },
-      codeAutoRetrievalTimeout: (String verificationId){
-        this.verificationId = verificationId;
-        print(verificationId);
-        print("Timeout");
-      },
-    );
   }
 
   void getCurrentLocation() async {
@@ -204,24 +138,81 @@ class _DetailsScreenState extends State<DetailsScreen> {
     });
   }
 
-  void getCurrentUser() async{
-    try{
-      final user = await _auth.currentUser();
-      if(user != null){
-        _currentUser = user;
-      }
-    }catch(e){
-      print(e);
-    }
+  void verifySuccess(){
+    updateUserData();
   }
-  @override
-  void initState() {
-    super.initState();
-    getCurrentUser();
+  void verifyFailed(String msg){
+    AlertBox().showErrorBox(context, 'Verification Failed\n$msg');
+  }
+  Future<void> updatePhoneNumber(){
+    _auth.verifyPhoneNumber(
+      phoneNumber: '+91' + _phoneNo,
+      timeout: Duration(seconds: 120),
+      verificationCompleted: (AuthCredential authCredential){
+        verifySuccess();
+      },
+      verificationFailed: (AuthException authException){
+        verifyFailed(authException.message);
+        print(authException.message);
+      },
+      codeSent: (String verificationId, [int forceResendingToken]){
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) => AlertDialog(
+              title: Text("Enter OTP"),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text('We have sent you an OTP(expires in 2 minutes) on entered phone number, please verify to continue.'),
+                  TextField(
+                    controller: _codeController,
+                  ),
+                ],
+              ),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text("Done"),
+                  textColor: Colors.white,
+                  color: kColorRed,
+                  onPressed: () async {
+                    setState(() {
+                      _loading = true;
+                    });
+                    smsCode = _codeController.text.trim();
+                    _credential = PhoneAuthProvider.getCredential(verificationId: verificationId, smsCode: smsCode);
+
+                    await (await FirebaseAuth.instance.currentUser()).updatePhoneNumberCredential(_credential).then((value){
+                      Navigator.pop(context);
+                      verifySuccess();
+                    }).catchError((error){
+                      verifyFailed(error.message);
+                    });
+
+                    setState(() {
+                      _loading = false;
+                    });
+                  },
+                )
+              ],
+            )
+        );
+      },
+      codeAutoRetrievalTimeout: (String verificationId){
+        this.verificationId = verificationId;
+        print(verificationId);
+        print("Timeout");
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+
+    _addressController.text = userApi.address;
+    _nameController.text = userApi.name;
+    _phoneController.text = userApi.phoneNo;
+
     return SafeArea(
       top: false,
       child: ModalProgressHUD(
@@ -243,7 +234,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 40.0),
                     child: Text(
-                      'Tell us about you',
+                      'Edit Profile Information',
                       style: TextStyle(
                         fontFamily: 'Proxima Nova',
                         fontSize: 24,
@@ -255,9 +246,38 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   SizedBox(
                     height: 25.0,
                   ),
-                  GestureDetector(
-                    onTap: (){
-                     chooseFile();
+                  PopupMenuButton(
+                    offset: Offset(-100,100),
+                    itemBuilder: (BuildContext buildContext) => <PopupMenuEntry<String>>[
+                      PopupMenuItem<String>(
+                        value: 'item_change_photo',
+                        child: MenuOption(
+                          label: 'New Photo',
+                          icon: Icons.add_photo_alternate,
+                        ),
+                      ),
+                      PopupMenuItem<String>(
+                        value: 'item_remove_photo',
+                        child: MenuOption(
+                          label: 'Remove Photo',
+                          icon: Icons.delete,
+                        ),
+                      ),
+                    ],
+                    onSelected: (selectedOption){
+                      setState(() {
+                        imagePicked = true;
+                      });
+                      switch(selectedOption){
+                        case 'item_change_photo':
+                          chooseFile();
+                          break;
+                        case 'item_remove_photo':
+                          setState(() {
+                            _image = null;
+                          });
+                          break;
+                      }
                     },
                     child: Container(
                       width: 150,
@@ -266,9 +286,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                         color: Colors.white,
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                          image: _image == null
-                              ? AssetImage('images/add-user.png',)
-                              : FileImage(_image),
+                          image: imagePicked ? (_image == null ? AssetImage('images/avatar.png'):FileImage(_image)) : NetworkImage(userApi.dpURL),
                           fit: BoxFit.cover,
                         ),
                         border: new Border.all(
@@ -284,6 +302,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 30.0),
                     child: TextField(
+                      controller: _nameController,
                       onChanged: (value){
                         _name = value;
                       },
@@ -296,6 +315,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 30.0),
                     child: TextField(
+                      controller: _phoneController,
                       keyboardType: TextInputType.number,
                       onChanged: (value){
                         _phoneNo = value;
@@ -336,7 +356,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           }
 
                           if(_phoneNo != null && _name != null && _address != ""){
-                            registerUser(_phoneNo, context);
+                            if(_phoneNo == userApi.phoneNo){
+
+                            }else{
+                              updatePhoneNumber();
+                            }
                           }else{
                             if(_phoneNo == null)
                               setState(() {
@@ -356,10 +380,26 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             _loading = false;
                           });
                         },
-                        text: 'Continue',
+                        text: 'Save changes',
                       ),
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 30),
+                    child: Container(
+                      width: double.infinity,
+                      child: RoundedButton(
+                        color: kColorRed,
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        text: 'Cancel',
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  )
                 ],
               ),
             ),
@@ -368,6 +408,4 @@ class _DetailsScreenState extends State<DetailsScreen> {
       ),
     );
   }
-
-
 }
