@@ -8,6 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:shutterhouse/components/menu_option.dart';
 import 'package:shutterhouse/navigation_pages/profile_page.dart';
+import 'package:shutterhouse/navigation_pages/rent_page.dart';
 import 'package:shutterhouse/navigation_pages/search_page.dart';
 import 'package:shutterhouse/screens/edit_profile_screen.dart';
 import 'package:shutterhouse/screens/welcome_screen.dart';
@@ -115,9 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
         appBarIconColor = Colors.white;
         break;
       case 2:
-        displayPage = Container(
-          color: Colors.red,
-        );
+        displayPage = RentPage();
         appBarColor = Colors.white;
         appBarIconColor = Colors.grey.shade800;
         break;
@@ -141,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Padding(
                 padding: const EdgeInsets.all(24.0),
                 child: Icon(
-                  Icons.shopping_cart,
+                  Icons.notifications,
                   color: appBarIconColor,
                 ),
               ),
@@ -190,11 +189,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   icon: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Icon(
-                      Icons.chat_bubble_outline,
+                      Icons.attach_money,
                     ),
                   ),
                   title: Text(
-                    'CHAT',
+                    'RENT',
                     style: TextStyle(
                       fontFamily: 'Proxima Nova',
                     ),

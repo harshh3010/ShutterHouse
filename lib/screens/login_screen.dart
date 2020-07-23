@@ -78,6 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
               children: <Widget>[
                 ClippedHeader(
                   color: kColorRed,
+                  text: 'Shutter House',
                 ),
                 Expanded(
                   child: SingleChildScrollView(

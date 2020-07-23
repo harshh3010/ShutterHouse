@@ -42,6 +42,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               children: <Widget>[
                 ClippedHeader(
                   color: kColorBlue,
+                  text: 'Shutter House',
                 ),
                 Expanded(
                   child: SingleChildScrollView(
