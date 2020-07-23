@@ -101,7 +101,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   size: 16.0,
                                 ),
                                 Text(
-                                  '${_address[2]}, ${_address[4]}', //TODO: change
+                                  '${_address[2]},${_address[4]}', //TODO: change
                                   style: TextStyle(
                                     fontFamily: 'Proxima Nova',
                                     color: Colors.blueGrey.shade400,

@@ -1,9 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:shutterhouse/components/best_offer_card.dart';
 import 'package:shutterhouse/components/category_card.dart';
 import 'package:shutterhouse/components/category_list.dart';
+import 'package:shutterhouse/components/loading_card.dart';
 import 'package:shutterhouse/model/category.dart';
 import 'package:shutterhouse/utilities/constants.dart';
+import 'package:shutterhouse/utilities/user_api.dart';
 
 class SearchPage extends StatefulWidget {
   @override
@@ -11,8 +15,52 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+
+  List<String> _address;
+  UserApi userApi = UserApi.instance;
+  List<Widget> availableCategories = [
+    SizedBox(width: 30.0,),
+    LoadingCard(),
+    LoadingCard(),
+    LoadingCard(),
+    LoadingCard(),
+  ];
+
+  Future<void> loadCategories() async{
+
+    List<Widget> myList = [];
+    myList.add(SizedBox(width: 30.0));
+
+    for(var category in CategoryList.getCategories() ){
+     var snapshot = await Firestore.instance.collection('Products').document('${_address[2]},${_address[4]}').collection('${category.id}').getDocuments();
+     if(snapshot.documents.length == 0){
+       continue;
+     }else{
+       myList.add(CategoryCard(
+         category: category.name,
+         imagePath: 'images/${category.id}.png',
+       ));
+     }
+    }
+
+    setState(() {
+      availableCategories = myList;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    _address = (userApi.address).split(',').toList();
+
+    loadCategories();
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return Container(
         width: double.infinity,
         height: double.infinity,
@@ -131,7 +179,7 @@ class _SearchPageState extends State<SearchPage> {
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
-                      children: getAvailableCategories(),
+                      children: availableCategories,
                     ),
                   ),
                   SizedBox(
@@ -183,6 +231,7 @@ class _SearchPageState extends State<SearchPage> {
         ));
   }
 }
+
 
 //TODO : make changes
 List<Widget> getAvailableCategories() {
