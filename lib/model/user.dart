@@ -1,5 +1,3 @@
-import 'package:geolocator/geolocator.dart';
-
 class User{
 
   String name;
@@ -8,7 +6,6 @@ class User{
   double latitude;
   double longitude;
   String email;
-
   String dpURL;
   double rating;
   int rents;

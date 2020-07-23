@@ -1,8 +1,13 @@
-import 'dart:convert';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:shutterhouse/components/best_offer_card.dart';
 import 'package:shutterhouse/components/category_card.dart';
+import 'package:shutterhouse/components/category_list.dart';
+import 'package:shutterhouse/components/loading_card.dart';
+import 'package:shutterhouse/components/search_box.dart';
+import 'package:shutterhouse/model/category.dart';
+import 'package:shutterhouse/screens/category_screen.dart';
 import 'package:shutterhouse/utilities/constants.dart';
 import 'package:shutterhouse/utilities/user_api.dart';
 
@@ -13,186 +18,153 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
 
+  List<String> _address;
+  UserApi userApi = UserApi.instance;
+  List<Widget> availableCategories = [
+    SizedBox(width: 30.0,),
+    LoadingCard(),
+    LoadingCard(),
+    LoadingCard(),
+    LoadingCard(),
+  ];
+
+  Future<void> loadCategories() async{
+
+    List<Widget> myList = [];
+    myList.add(SizedBox(width: 30.0));
+
+    for(var category in CategoryList.getCategories() ){
+     var snapshot = await Firestore.instance.collection('Products').document('${_address[2]},${_address[4]}').collection('${category.id}').getDocuments();
+     if(snapshot.documents.length == 0){
+       continue;
+     }else{
+       myList.add(CategoryCard(
+         category: category.name,
+         imagePath: 'images/${category.id}.png',
+         onPressed: (){
+           Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryScreen(category: category.name,category_id: category.id,)));
+         },
+       ));
+     }
+    }
+
+    setState(() {
+      availableCategories = myList;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    _address = (userApi.address).split(',').toList();
+    loadCategories();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-      child: CustomScrollView(
-        slivers: <Widget>[
-          SliverFillRemaining(
-            hasScrollBody: false,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                SizedBox(
-                  height: 15,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30.0,vertical: 0),
-                  child: Text(
-                    'Hello,',
-                    style: TextStyle(
-                      fontSize: 50,
-                      fontFamily: 'Proxima Nova',
-                      fontWeight: FontWeight.w900,
-                      color: kColorRed,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30.0,vertical: 0),
-                  child: Text(
-                    'What equipment are you looking for?',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: 'Proxima Nova',
-                      color: Colors.grey.shade400,
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 25,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30.0,vertical: 0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10.0),
-                              boxShadow: [ BoxShadow(
-                                color: Colors.black.withOpacity(0.08),
-                                blurRadius: 3.0,
-                              ),]
-                          ),
-                          child: Center(
-                            child: TextField(
-                              textAlignVertical: TextAlignVertical.center,
-                              cursorColor: kColorRed,
-                              decoration: InputDecoration(
-                                prefixIcon: Icon(
-                                  Icons.search,
-                                  color: Colors.grey.shade800,
-                                ),
-                                hintText: 'Try lens',
-                                hintStyle: TextStyle(
-                                  fontFamily: 'Proxima Nova',
-                                  color: Colors.grey.shade500,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                border: InputBorder.none,
-                                focusedBorder: InputBorder.none,
-                                enabledBorder: InputBorder.none,
-                                errorBorder: InputBorder.none,
-                                disabledBorder: InputBorder.none,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 15,
-                      ),
-                      Container(
-                        padding: EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                            color: kColorRed,
-                            borderRadius: BorderRadius.circular(10.0),
-                            boxShadow: [ BoxShadow(
-                              color: Colors.black.withOpacity(0.08),
-                              blurRadius: 3.0,
-                            ),]
-                        ),
-                        child: Center(
-                          child: GestureDetector(
-                            onTap: (){
-                              //TODO : code
 
-                            },
-                            child: Icon(
-                              Icons.tune,
-                              color: Colors.white,
-                            ),
+    return Container(
+        width: double.infinity,
+        height: double.infinity,
+        child: CustomScrollView(
+          slivers: <Widget>[
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30.0, vertical: 0),
+                    child: Text(
+                      'Hello,',
+                      style: TextStyle(
+                        fontSize: 50,
+                        fontFamily: 'Proxima Nova',
+                        fontWeight: FontWeight.w900,
+                        color: kColorRed,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30.0, vertical: 0),
+                    child: Text(
+                      'What equipment are you looking for?',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontFamily: 'Proxima Nova',
+                        color: Colors.grey.shade400,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 25,
+                  ),
+                  SearchBox(
+                    hint: 'Try Lens',
+                  ),
+                  SizedBox(
+                    height: 25,
+                  ),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: availableCategories,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 25,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 36.0, vertical: 0),
+                    child: Row(
+                      textBaseline: TextBaseline.alphabetic,
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          'Best offers',
+                          style: TextStyle(
+                            color: Colors.grey.shade800,
+                            fontSize: 30,
+                            fontFamily: 'Proxima Nova',
+                            fontWeight: FontWeight.w900,
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 25,
-                ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: <Widget>[
-                      SizedBox(
-                        width: 30,
-                      ),
-                      CategoryCard(
-                        category: 'Photo',
-                        url: 'https://pluspng.com/img-png/nikon-png-black-nikon-black-nikon-camera-png-image-260.jpg',
-                      ),
-                      CategoryCard(
-                        category: 'Video',
-                        url: 'https://pluspng.com/img-png/nikon-png-black-nikon-black-nikon-camera-png-image-260.jpg',
-                      ),
-                      CategoryCard(
-                        category: 'Go Pro',
-                        url: 'https://pluspng.com/img-png/nikon-png-black-nikon-black-nikon-camera-png-image-260.jpg',
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 25,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 36.0,vertical: 0),
-                  child: Row(
-                    textBaseline: TextBaseline.alphabetic,
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        'Best offers',
-                        style: TextStyle(
-                          color: Colors.grey.shade800,
-                          fontSize: 30,
-                          fontFamily: 'Proxima Nova',
-                          fontWeight: FontWeight.w900,
+                        Text(
+                          'View All',
+                          style: TextStyle(
+                            color: Colors.grey.shade500,
+                            fontSize: 20,
+                            fontFamily: 'Proxima Nova',
+                            fontWeight: FontWeight.w900,
+                          ),
                         ),
-                      ),
-                      Text(
-                        'View All',
-                        style: TextStyle(
-                          color: Colors.grey.shade500,
-                          fontSize: 20,
-                          fontFamily: 'Proxima Nova',
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                BestOfferCard(
-                  name: 'Name of the product',
-                  cost: 2000,
-                  discount: .5,
-                  url: 'https://pluspng.com/img-png/nikon-png-black-nikon-black-nikon-camera-png-image-260.jpg',
-                ),
-              ],
-            ),
-          )
-        ],
-      )
-    );
+                  SizedBox(
+                    height: 15,
+                  ),
+                  BestOfferCard(
+                    name: 'Name of the product',
+                    cost: 2000,
+                    discount: .5,
+                    url:
+                        'https://pluspng.com/img-png/nikon-png-black-nikon-black-nikon-camera-png-image-260.jpg',
+                  ),
+                ],
+              ),
+            )
+          ],
+        ));
   }
 }

@@ -47,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
       userApi.phoneNo = snapShot.data['phoneNo'];
       userApi.latitude = snapShot.data['latitude'];
       userApi.longitude = snapShot.data['longitude'];
-      userApi.dpURL = snapShot.data['dpURL'];
+      userApi.dpURL = snapShot.data['dpUrl'];
       userApi.rents = snapShot.data['rents'];
       userApi.reviews = snapShot.data['reviews'];
       userApi.rating = snapShot.data['rating'];
@@ -78,6 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
               children: <Widget>[
                 ClippedHeader(
                   color: kColorRed,
+                  text: 'Shutter House',
                 ),
                 Expanded(
                   child: SingleChildScrollView(

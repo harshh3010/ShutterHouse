@@ -66,7 +66,7 @@ class RentCard extends StatelessWidget {
                   children: <Widget>[
                     Image(
                       image: NetworkImage(productUrl),
-                      width: 100,
+                      width: 80,
                     ),
                     Padding(
                       padding: const EdgeInsets.all(10.0),

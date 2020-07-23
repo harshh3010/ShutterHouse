@@ -3,7 +3,8 @@ import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 
 class ClippedHeader extends StatelessWidget {
   final Color color;
-  ClippedHeader({@required this.color});
+  final String text;
+  ClippedHeader({@required this.color,@required this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +35,7 @@ class ClippedHeader extends StatelessWidget {
               width: 15.0,
             ),
             Text(
-              'Shutter House',
+              text,
               style: TextStyle(
                   color: Colors.white,
                   fontFamily: 'Proxima Nova',
