@@ -21,6 +21,7 @@ class Product{
 
   Map<String,Object> getProductData(){
     return {
+      'id' : id,
       'name' : name,
       'description' : description,
       'cost' : cost,
@@ -37,5 +38,8 @@ class Product{
     };
   }
 
+  void setId(String id){
+    this.id = id;
+  }
 
 }

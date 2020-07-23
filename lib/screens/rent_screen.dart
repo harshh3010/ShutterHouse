@@ -49,13 +49,11 @@ class _RentScreenState extends State<RentScreen> {
     await uploadTask.onComplete;
     print('File Uploaded');
     storageReference.getDownloadURL().then((fileURL) {
-      setState(() {
-        _uploadedFileURL = fileURL;
-      });
+      addProduct(fileURL);
     });
   }
 
-  void addProduct() async {
+  void addProduct(String url) async {
 
     Product product = Product(
       id: null,
@@ -63,7 +61,7 @@ class _RentScreenState extends State<RentScreen> {
       description:  _description,
       cost: _cost,
       category: _selectedCategory,
-      imageURL: '${timestamp}',
+      imageURL: url,
       discount: 0,
       rents: 0,
       reviews: 0,
@@ -77,7 +75,7 @@ class _RentScreenState extends State<RentScreen> {
     Firestore.instance.collection('Products').document('${product.city},${product.country}').setData(new Map<String,String>()).then((value) async {
       DocumentReference documentReference = Firestore.instance.collection('Products').document('${product.city},${product.country}')
           .collection('${product.category}').document();
-      product.id = documentReference.documentID;
+      product.setId(documentReference.documentID);
       documentReference.setData(product.getProductData()).then((value){
         Navigator.pop(context);
       }).catchError((error){
@@ -249,7 +247,6 @@ class _RentScreenState extends State<RentScreen> {
                               }else{
                                 timestamp = (DateTime.now()).toString();
                                 await uploadFile();
-                                addProduct();
                               }
                             }else{
                               if(_name == null)
