@@ -5,7 +5,9 @@ import 'package:shutterhouse/components/best_offer_card.dart';
 import 'package:shutterhouse/components/category_card.dart';
 import 'package:shutterhouse/components/category_list.dart';
 import 'package:shutterhouse/components/loading_card.dart';
+import 'package:shutterhouse/components/search_box.dart';
 import 'package:shutterhouse/model/category.dart';
+import 'package:shutterhouse/screens/category_screen.dart';
 import 'package:shutterhouse/utilities/constants.dart';
 import 'package:shutterhouse/utilities/user_api.dart';
 
@@ -39,6 +41,9 @@ class _SearchPageState extends State<SearchPage> {
        myList.add(CategoryCard(
          category: category.name,
          imagePath: 'images/${category.id}.png',
+         onPressed: (){
+           Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryScreen(category: category.name,)));
+         },
        ));
      }
     }
@@ -54,7 +59,6 @@ class _SearchPageState extends State<SearchPage> {
     super.initState();
 
     _address = (userApi.address).split(',').toList();
-
     loadCategories();
   }
 
@@ -103,75 +107,8 @@ class _SearchPageState extends State<SearchPage> {
                   SizedBox(
                     height: 25,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 30.0, vertical: 0),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10.0),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.08),
-                                    blurRadius: 3.0,
-                                  ),
-                                ]),
-                            child: Center(
-                              child: TextField(
-                                textAlignVertical: TextAlignVertical.center,
-                                cursorColor: kColorRed,
-                                decoration: InputDecoration(
-                                  prefixIcon: Icon(
-                                    Icons.search,
-                                    color: Colors.grey.shade800,
-                                  ),
-                                  hintText: 'Try lens',
-                                  hintStyle: TextStyle(
-                                    fontFamily: 'Proxima Nova',
-                                    color: Colors.grey.shade500,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  border: InputBorder.none,
-                                  focusedBorder: InputBorder.none,
-                                  enabledBorder: InputBorder.none,
-                                  errorBorder: InputBorder.none,
-                                  disabledBorder: InputBorder.none,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 15,
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                              color: kColorRed,
-                              borderRadius: BorderRadius.circular(10.0),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.08),
-                                  blurRadius: 3.0,
-                                ),
-                              ]),
-                          child: Center(
-                            child: GestureDetector(
-                              onTap: () {
-                                //TODO : code
-                              },
-                              child: Icon(
-                                Icons.tune,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                  SearchBox(
+                    hint: 'Try Lens',
                   ),
                   SizedBox(
                     height: 25,
@@ -230,19 +167,4 @@ class _SearchPageState extends State<SearchPage> {
           ],
         ));
   }
-}
-
-
-//TODO : make changes
-List<Widget> getAvailableCategories() {
-  List<Widget> myList = [];
-  myList.add(SizedBox(width: 30.0));
-  List<Category> categories = CategoryList.getCategories();
-  for (var category in categories) {
-    myList.add(CategoryCard(
-      category: category.name,
-      imagePath: 'images/${category.id}.png',
-    ));
-  }
-  return myList;
 }

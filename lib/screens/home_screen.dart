@@ -92,35 +92,32 @@ class _HomeScreenState extends State<HomeScreen> {
             case 'item_about': print('About');
             break;
           }
-        }, //TODO: add methods
+        }, //
+        // TODO: add methods
       );
     }
 
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
-      ),
-    );
+    List<Widget> navigationPages = [
+      SearchPage(),
+      ProfilePage(),
+      RentPage(),
+    ];
 
-    Widget displayPage;
     switch (_currentIndex) {
       case 0:
-        displayPage = SearchPage();
         appBarColor = Colors.white;
         appBarIconColor = Colors.grey.shade800;
         break;
       case 1:
-        displayPage = ProfilePage();
         appBarColor = kColorBlue;
         appBarIconColor = Colors.white;
         break;
       case 2:
-        displayPage = RentPage();
         appBarColor = Colors.white;
         appBarIconColor = Colors.grey.shade800;
         break;
     }
+
     return ModalProgressHUD(
       inAsyncCall: _loading,
       color: Colors.white,
@@ -146,7 +143,10 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
-          body: displayPage,
+          body: IndexedStack(
+            index: _currentIndex,
+            children: navigationPages,
+          ),
           bottomNavigationBar: Padding(
             padding: EdgeInsets.fromLTRB(24.0, 0, 24, 24),
             child: BottomNavigationBar(
