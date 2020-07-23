@@ -17,7 +17,17 @@ class CategoryScreen extends StatefulWidget {
 
 class _CategoryScreenState extends State<CategoryScreen> {
 
-  List<ProductCard> availableProducts = [];
+  List<Widget> availableProducts = [
+    Center(
+      child: Padding(
+        padding: const EdgeInsets.all(80.0),
+        child: CircularProgressIndicator(
+          backgroundColor: Colors.white,
+          strokeWidth: 4,
+        ),
+      ),
+    ),
+  ];
   UserApi userApi = UserApi.instance;
   List<String> _address;
 
