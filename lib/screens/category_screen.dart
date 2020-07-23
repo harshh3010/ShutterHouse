@@ -1,18 +1,62 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shutterhouse/components/product_card.dart';
 import 'package:shutterhouse/components/search_box.dart';
+import 'package:shutterhouse/model/product.dart';
 import 'package:shutterhouse/utilities/constants.dart';
+import 'package:shutterhouse/utilities/user_api.dart';
 
 class CategoryScreen extends StatefulWidget {
   @override
   _CategoryScreenState createState() => _CategoryScreenState();
 
-  final String category;
-  CategoryScreen({@required this.category});
+  final String category,category_id;
+  CategoryScreen({@required this.category,@required this.category_id});
 }
 
 class _CategoryScreenState extends State<CategoryScreen> {
+
+  List<ProductCard> availableProducts = [];
+  UserApi userApi = UserApi.instance;
+  List<String> _address;
+
+  void loadProducts() async {
+    List<ProductCard> myList = [];
+    QuerySnapshot querySnapshot = await Firestore.instance.collection('Products').document('${_address[2]},${_address[4]}').collection(widget.category_id).getDocuments();
+    for(var snapshot in querySnapshot.documents){
+      Product product = Product(
+        id: snapshot.data['id'],
+        name: snapshot.data['name'],
+        description: snapshot.data['description'],
+        cost: snapshot.data['cost'],
+        category: snapshot.data['category'],
+        city: snapshot.data['city'],
+        country: snapshot.data['country'],
+        discount: snapshot.data['discount'],
+        imageURL: snapshot.data['imageUrl'],
+        ownerEmail: snapshot.data['ownerEmail'],
+        ownerName: snapshot.data['ownerName'],
+        rating: snapshot.data['rating'],
+        reviews: snapshot.data['reviews'],
+        rents: snapshot.data['rents'],
+      );
+
+      myList.add(ProductCard(product: product,));
+    }
+    setState(() {
+      availableProducts = myList;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _address = (userApi.address).split(',').toList();
+    loadProducts();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,26 +116,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
             ),
             SingleChildScrollView(
               child: Column(
-                children: <Widget>[
-                  ProductCard(
-                    photoUrl: 'https://pluspng.com/img-png/nikon-png-black-nikon-black-nikon-camera-png-image-260.jpg',
-                    price: 1500,
-                    rating: 4.7,
-                    name: 'Product Name',
-                  ),
-                  ProductCard(
-                    photoUrl: 'https://pluspng.com/img-png/nikon-png-black-nikon-black-nikon-camera-png-image-260.jpg',
-                    price: 1500,
-                    rating: 4.7,
-                    name: 'Product Name',
-                  ),
-                  ProductCard(
-                    photoUrl: 'https://pluspng.com/img-png/nikon-png-black-nikon-black-nikon-camera-png-image-260.jpg',
-                    price: 1500,
-                    rating: 4.7,
-                    name: 'Product Name',
-                  ),
-                ],
+                children: availableProducts,
               ),
             )
           ],

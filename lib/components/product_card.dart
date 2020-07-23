@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:shutterhouse/model/product.dart';
 import 'package:shutterhouse/utilities/constants.dart';
 
 class ProductCard extends StatelessWidget {
 
-  final String name,photoUrl;
-  final double price,rating;
-  ProductCard({@required this.name,@required this.photoUrl, @required this.price, @required this.rating});
+  final Product product;
+  ProductCard({@required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class ProductCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Image(
-              image: NetworkImage(photoUrl),
+              image: NetworkImage(product.imageURL),
               width: 100,
             ),
             SizedBox(
@@ -42,7 +42,7 @@ class ProductCard extends StatelessWidget {
                   mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
                     Text(
-                      name,
+                      product.name,
                       style: TextStyle(
                         fontSize: 20,
                         fontFamily: 'Proxima Nova',
@@ -55,7 +55,7 @@ class ProductCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text(
-                          'Rs. $price',
+                          'Rs. ${product.cost}',
                           style: TextStyle(
                             fontSize: 20,
                             fontFamily: 'Proxima Nova',
@@ -64,7 +64,7 @@ class ProductCard extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          '⭐ $rating',
+                          '⭐ ${product.rating}',
                           style: TextStyle(
                             fontSize: 16,
                             fontFamily: 'Proxima Nova',

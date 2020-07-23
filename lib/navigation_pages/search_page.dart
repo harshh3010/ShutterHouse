@@ -42,7 +42,7 @@ class _SearchPageState extends State<SearchPage> {
          category: category.name,
          imagePath: 'images/${category.id}.png',
          onPressed: (){
-           Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryScreen(category: category.name,)));
+           Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryScreen(category: category.name,category_id: category.id,)));
          },
        ));
      }
