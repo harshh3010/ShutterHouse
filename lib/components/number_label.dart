@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 class NumberLabel extends StatelessWidget {
 
   final String label,value;
-  NumberLabel({@required this.label,@required this.value});
+  final Color labelColor,valueColor;
+  NumberLabel({@required this.label,@required this.value,@required this.labelColor,@required this.valueColor});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +15,7 @@ class NumberLabel extends StatelessWidget {
           value,
           style: TextStyle(
             fontSize: 24,
-            color: Colors.white,
+            color: valueColor,
             fontFamily: 'Proxima Nova',
             fontWeight: FontWeight.bold,
           ),
@@ -26,7 +27,7 @@ class NumberLabel extends StatelessWidget {
           label,
           style: TextStyle(
             fontFamily: 'Proxima Nova',
-            color: Colors.blueGrey.shade400,
+            color: labelColor,
             fontSize: 12.0,
             fontWeight: FontWeight.w900,
           ),
