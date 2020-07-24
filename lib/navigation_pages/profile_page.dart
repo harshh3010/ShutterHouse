@@ -120,14 +120,20 @@ class _ProfilePageState extends State<ProfilePage> {
                                 NumberLabel(
                                   value: '⭐ ${userApi.rating}', // TODO: change
                                   label: 'RATING',
+                                  valueColor: Colors.white,
+                                  labelColor: Colors.blueGrey.shade400,
                                 ),
                                 NumberLabel(
                                   value: '${userApi.reviews}',
                                   label: 'REVIEWS',
+                                  valueColor: Colors.white,
+                                  labelColor: Colors.blueGrey.shade400,
                                 ),
                                 NumberLabel(
                                   value: '${userApi.rents}',
                                   label: 'RENTS',
+                                  valueColor: Colors.white,
+                                  labelColor: Colors.blueGrey.shade400,
                                 ),
                               ],
                             )
