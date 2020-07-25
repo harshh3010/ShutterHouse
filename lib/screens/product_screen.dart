@@ -4,6 +4,7 @@ import 'package:shutterhouse/components/number_label.dart';
 import 'package:shutterhouse/components/price_card.dart';
 import 'package:shutterhouse/components/rents_button.dart';
 import 'package:shutterhouse/model/product.dart';
+import 'package:shutterhouse/screens/booking_screen.dart';
 import 'package:shutterhouse/utilities/constants.dart';
 
 enum Selection { Reviews, Price }
@@ -209,32 +210,37 @@ class _ProductScreenState extends State<ProductScreen> {
             ),
           ],
         ),
-        bottomNavigationBar: Container(
-          decoration: BoxDecoration(
-            color: kColorRed,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-              bottomRight: Radius.zero,
-              bottomLeft: Radius.zero,
+        bottomNavigationBar: GestureDetector(
+          onTap: (){
+            Navigator.push(context,MaterialPageRoute(builder: (context) => BookingScreen(product: widget.product,)));
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: kColorRed,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+                bottomRight: Radius.zero,
+                bottomLeft: Radius.zero,
+              ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 5.0,
+                  ),
+                ],
             ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 5.0,
+            height: 80,
+            child: Center(
+              child: Text(
+                'CHECK AVAILABILITY',
+                style: TextStyle(
+                  fontFamily: 'Proxima Nova',
+                  fontSize: 20,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 2
                 ),
-              ],
-          ),
-          height: 80,
-          child: Center(
-            child: Text(
-              'CHECK AVAILABILITY',
-              style: TextStyle(
-                fontFamily: 'Proxima Nova',
-                fontSize: 20,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 2
               ),
             ),
           ),
