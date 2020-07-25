@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shutterhouse/components/rent_card.dart';
+import 'package:shutterhouse/components/booking_card.dart';
 
 class ScheduleCard extends StatelessWidget {
   const ScheduleCard({
@@ -12,7 +12,7 @@ class ScheduleCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          RentCard(
+          BookingCard(
             startDay: 15,
             startMonth: 'April',
             endDay: 19,
@@ -20,7 +20,7 @@ class ScheduleCard extends StatelessWidget {
             productName: 'Nikon D5100 DSLR Camera',
             productUrl: 'https://pluspng.com/img-png/nikon-png-black-nikon-black-nikon-camera-png-image-260.jpg',
           ),
-          RentCard(
+          BookingCard(
             startDay: 15,
             startMonth: 'April',
             endDay: 19,

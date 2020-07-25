@@ -6,16 +6,17 @@ import 'package:shutterhouse/utilities/constants.dart';
 class ProductCard extends StatelessWidget {
 
   final Product product;
-  ProductCard({@required this.product});
+  final Function onPressed;
+  final Function onLongPressed;
+  ProductCard({@required this.product,this.onPressed,this.onLongPressed});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 10),
       child: GestureDetector(
-        onTap: (){
-          Navigator.push(context,MaterialPageRoute(builder: (context) => ProductScreen(product: product,image: Image.network(product.imageURL),)));
-        },
+        onLongPress: onLongPressed,
+        onTap: onPressed,
         child: Container(
           padding: EdgeInsets.all(20),
           width: double.infinity,
@@ -33,7 +34,7 @@ class ProductCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Hero(
-                tag: 'product_image',
+                tag: '${product.id}',
                 child: Image(
                   image: NetworkImage(product.imageURL),
                   width: 100,
@@ -50,7 +51,7 @@ class ProductCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.max,
                     children: <Widget>[
                       Hero(
-                  tag: 'product_name',
+                        tag: '${product.id}--NAME',
                         child: Text(
                           product.name,
                           style: TextStyle(

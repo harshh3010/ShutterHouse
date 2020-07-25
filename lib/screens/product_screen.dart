@@ -110,7 +110,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                     child: Padding(
                                       padding: const EdgeInsets.fromLTRB(30, 10, 0, 0),
                                       child: Hero(
-                                        tag: 'product_image',
+                                        tag: '${widget.product.id}',
                                         child: widget.image,
                                       ),
                                     ),
@@ -120,7 +120,7 @@ class _ProductScreenState extends State<ProductScreen> {
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 10),
                                 child: Hero(
-                                  tag: 'product_name',
+                                  tag: '${widget.product.id}--NAME',
                                   child: Text(
                                     widget.product.name,
                                     style: TextStyle(
