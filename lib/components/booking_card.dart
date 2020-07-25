@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class RentCard extends StatelessWidget {
+class BookingCard extends StatelessWidget {
 
   final String startMonth,productName,productUrl,endMonth;
   final int startDay,endDay;
-  RentCard({@required this.startMonth,@required this.startDay,@required this.endMonth,@required this.endDay,@required this.productName,@required this.productUrl});
+  BookingCard({@required this.startMonth,@required this.startDay,@required this.endMonth,@required this.endDay,@required this.productName,@required this.productUrl});
 
   @override
   Widget build(BuildContext context) {

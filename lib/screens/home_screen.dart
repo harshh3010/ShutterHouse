@@ -29,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   bool _loading = false;
 
-  Future<void> signOut() async{
+  Future<void> signOut() async {
     await _auth.signOut();
     Navigator.pushReplacementNamed(context, WelcomeScreen.id);
   }
@@ -65,7 +65,8 @@ class _HomeScreenState extends State<HomeScreen> {
               label: 'Help',
               icon: Icons.help_outline,
             ),
-          ),PopupMenuItem<String>(
+          ),
+          PopupMenuItem<String>(
             value: 'item_about',
             child: MenuOption(
               label: 'About',
@@ -73,8 +74,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ],
-        onSelected: (selectedOption) async{
-          switch(selectedOption){
+        onSelected: (selectedOption) async {
+          switch (selectedOption) {
             case 'item_logout':
               setState(() {
                 _loading = true;
@@ -83,14 +84,16 @@ class _HomeScreenState extends State<HomeScreen> {
               setState(() {
                 _loading = false;
               });
-            break;
+              break;
             case 'item_edit_profile':
               Navigator.pushNamed(context, EditProfileScreen.id);
-            break;
-            case 'item_help': print('Help');
-            break;
-            case 'item_about': print('About');
-            break;
+              break;
+            case 'item_help':
+              print('Help');
+              break;
+            case 'item_about':
+              print('About');
+              break;
           }
         }, //
         // TODO: add methods
@@ -212,6 +215,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
-
-
