@@ -28,7 +28,10 @@ class _ProductScreenState extends State<ProductScreen> {
     if(selectedButton == Selection.Reviews){
       cardToDisplay = Container(color: kColorRed,width: 150,height: 150,);
     }else{
-      cardToDisplay = PriceCard();
+      cardToDisplay = PriceCard(
+        cost: widget.product.cost,
+        discount: widget.product.discount,
+      );
     }
 
     return SafeArea(

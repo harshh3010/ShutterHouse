@@ -3,6 +3,10 @@ import 'package:shutterhouse/components/number_label.dart';
 import 'package:shutterhouse/utilities/constants.dart';
 
 class PriceCard extends StatelessWidget {
+
+  final double cost,discount;
+  PriceCard({@required this.cost, @required this.discount});
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -39,7 +43,7 @@ class PriceCard extends StatelessWidget {
                                 blurRadius: 3.0,
                               ),
                             ]),
-                        child: NumberLabel(label:'Weekday', value: 'Rs 1200', labelColor: Colors.grey.shade400, valueColor: Colors.grey.shade800),
+                        child: NumberLabel(label:'Weekday', value: 'Rs $cost', labelColor: Colors.grey.shade400, valueColor: Colors.grey.shade800),
                       ),
                     ),
                   ),
@@ -56,7 +60,7 @@ class PriceCard extends StatelessWidget {
                                 blurRadius: 3.0,
                               ),
                             ]),
-                        child: NumberLabel(label:'Discount', value: '0%', labelColor: Colors.grey.shade400, valueColor: kColorRed),
+                        child: NumberLabel(label:'Discount', value: '$discount%', labelColor: Colors.grey.shade400, valueColor: kColorRed),
                       ),
                     ),
                   ),
