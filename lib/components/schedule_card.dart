@@ -81,6 +81,7 @@ class _ScheduleCardState extends State<ScheduleCard> {
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: myBookings,
       ),
     );

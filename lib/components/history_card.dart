@@ -92,6 +92,7 @@ class _HistoryCardState extends State<HistoryCard> {
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: myBookings
       ),
     );
