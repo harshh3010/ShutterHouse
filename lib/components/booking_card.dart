@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:shutterhouse/model/booking.dart';
 
 class BookingCard extends StatelessWidget {
 
-  final String startMonth,productName,productUrl,endMonth;
-  final int startDay,endDay;
-  BookingCard({@required this.startMonth,@required this.startDay,@required this.endMonth,@required this.endDay,@required this.productName,@required this.productUrl});
+  final Booking booking;
+  BookingCard({@required this.booking});
 
   @override
   Widget build(BuildContext context) {
+
+    final DateFormat formatter = DateFormat('MMMM, d, yyyy');
+    String startDate = formatter.format(DateTime.fromMillisecondsSinceEpoch(booking.startTimestamp));
+    String endDate = formatter.format(DateTime.fromMillisecondsSinceEpoch(booking.endTimestamp));
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
@@ -15,7 +21,7 @@ class BookingCard extends StatelessWidget {
           padding:
           const EdgeInsets.symmetric(vertical: 0, horizontal: 30),
           child: Text(
-            '$startMonth, $startDay',
+            '$startDate',
             style: TextStyle(
               color: Colors.grey.shade800,
               fontSize: 30,
@@ -28,6 +34,7 @@ class BookingCard extends StatelessWidget {
           padding: const EdgeInsets.symmetric(
               horizontal: 30, vertical: 10),
           child: Container(
+            height: 180,
             padding: EdgeInsets.all(24),
             decoration: BoxDecoration(
                 color: Colors.white,
@@ -38,53 +45,61 @@ class BookingCard extends StatelessWidget {
                     blurRadius: 3.0,
                   ),
                 ]),
-            child: Column(
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      productName,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontFamily: 'Proxima Nova',
-                        fontWeight: FontWeight.w900,
-                        color: Colors.grey.shade800,
-                      ),
-                    ),
-                    Icon(
-                      //TODO : Add action
-                      Icons.more_vert,
-                      color: Colors.grey.shade800,
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Row(
-                  children: <Widget>[
-                    Image(
-                      image: NetworkImage(productUrl),
-                      width: 80,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Text(
-                        '$startMonth,$startDay - $endMonth,$endDay',
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        booking.productName,
                         style: TextStyle(
-                          fontSize: 15,
+                          fontSize: 20,
                           fontFamily: 'Proxima Nova',
                           fontWeight: FontWeight.w900,
-                          color: Colors.grey.shade400,
+                          color: Colors.grey.shade800,
                         ),
                       ),
-                    ),
-                  ],
-                )
-              ],
+                      Icon(
+                        //TODO : Add action
+                        Icons.more_vert,
+                        color: Colors.grey.shade800,
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Image(
+                        image: NetworkImage(booking.imageUrl),
+                        width: 80,
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text(
+                            '$startDate to $endDate',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontFamily: 'Proxima Nova',
+                              fontWeight: FontWeight.w900,
+                              color: Colors.grey.shade400,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
+        ),
+        SizedBox(
+          height: 25,
         )
       ],
     );

@@ -138,7 +138,6 @@ class _RentPageState extends State<RentPage> {
               ),
             ),
         );
-
         index ++;
       }
     }

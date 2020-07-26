@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shutterhouse/components/alert_box.dart';
 import 'package:shutterhouse/components/rounded_button.dart';
 import 'package:shutterhouse/model/booking.dart';
