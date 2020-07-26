@@ -11,7 +11,17 @@ class ScheduleCard extends StatefulWidget {
 }
 
 class _ScheduleCardState extends State<ScheduleCard> {
-  List<BookingCard> myBookings = [];
+  List<Widget> myBookings = [
+    Center(
+      child: Padding(
+        padding: const EdgeInsets.all(80.0),
+        child: CircularProgressIndicator(
+          backgroundColor: Colors.white,
+          strokeWidth: 4,
+        ),
+      ),
+    )
+  ];
   List<String> _address;
   UserApi userApi = UserApi.instance;
 
@@ -50,11 +60,11 @@ class _ScheduleCardState extends State<ScheduleCard> {
 
     myList.sort((a, b) => a.startTimestamp.compareTo(b.startTimestamp));
 
+    List<BookingCard> bookings = [];
     for (var booking in myList) {
+      bookings.add(BookingCard(booking: booking,));
       setState(() {
-        myBookings.add(BookingCard(
-          booking: booking,
-        ));
+        myBookings = bookings;
       });
     }
   }
@@ -71,19 +81,7 @@ class _ScheduleCardState extends State<ScheduleCard> {
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: myBookings.isEmpty
-            ? [
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(80.0),
-                    child: CircularProgressIndicator(
-                      backgroundColor: Colors.white,
-                      strokeWidth: 4,
-                    ),
-                  ),
-                ),
-              ]
-            : myBookings,
+        children: myBookings,
       ),
     );
   }
