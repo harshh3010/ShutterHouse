@@ -7,6 +7,7 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shutterhouse/components/number_label.dart';
 import 'package:shutterhouse/components/price_card.dart';
 import 'package:shutterhouse/components/rents_button.dart';
+import 'package:shutterhouse/components/reviews_page.dart';
 import 'package:shutterhouse/model/product.dart';
 import 'package:shutterhouse/screens/booking_screen.dart';
 import 'package:shutterhouse/utilities/constants.dart';
@@ -34,7 +35,7 @@ class _ProductScreenState extends State<ProductScreen> {
 
     Widget cardToDisplay;
     if(selectedButton == Selection.Reviews){
-      cardToDisplay = Container(color: kColorRed,width: 150,height: 150,);
+      cardToDisplay = ReviewsPage();
     }else{
       cardToDisplay = PriceCard(
         cost: widget.product.cost,
