@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shutterhouse/components/alert_box.dart';
 import 'package:shutterhouse/components/rounded_button.dart';
 import 'package:shutterhouse/model/booking.dart';
@@ -14,7 +15,8 @@ class BookingScreen extends StatefulWidget {
   _BookingScreenState createState() => _BookingScreenState();
 
   final Product product;
-  BookingScreen({@required this.product});
+  final List<Map<String,int>> bookedSlots;
+  BookingScreen({@required this.product,@required this.bookedSlots});
 }
 
 class _BookingScreenState extends State<BookingScreen> {
@@ -25,7 +27,11 @@ class _BookingScreenState extends State<BookingScreen> {
   UserApi userApi = UserApi.instance;
   bool _loading = false;
   
-  void confirmBooking() async {
+  Future<void> confirmBooking() async {
+
+    setState(() {
+      _loading = true;
+    });
 
     Booking booking = Booking(
       category: widget.product.category,
@@ -54,19 +60,23 @@ class _BookingScreenState extends State<BookingScreen> {
       AlertBox().showErrorBox(context, error.message);
     });
 
+    setState(() {
+      _loading = false;
+    });
+
   }
 
   @override
   Widget build(BuildContext context) {
-    return ModalProgressHUD(
-      inAsyncCall: _loading,
-      color: Colors.white,
-      opacity: .5,
-      progressIndicator: CircularProgressIndicator(
-        valueColor: new AlwaysStoppedAnimation<Color>(kColorRed),
-      ),
-      child: SafeArea(
-        top: false,
+    return SafeArea(
+      top: false,
+      child: ModalProgressHUD(
+        inAsyncCall: _loading,
+        color: Colors.white,
+        opacity: .5,
+        progressIndicator: CircularProgressIndicator(
+          valueColor: new AlwaysStoppedAnimation<Color>(kColorRed),
+        ),
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.white,
@@ -97,32 +107,14 @@ class _BookingScreenState extends State<BookingScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 30,
-                        vertical: 10,
-                      ),
-                      child: Text(
-                        'Product Available',
-                        style: TextStyle(
-                          color: kColorRed,
-                          fontFamily: 'Proxima Nova',
-                          fontSize: 40,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 25,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 30,
                         vertical: 0,
                       ),
                       child: Text(
                         'Book Now',
                         style: TextStyle(
-                          color: Colors.grey.shade800,
+                          color: kColorRed,
                           fontFamily: 'Proxima Nova',
-                          fontSize: 26,
+                          fontSize: 42,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -239,21 +231,31 @@ class _BookingScreenState extends State<BookingScreen> {
                       child: RoundedButton(
                         color: kColorRed,
                         text: 'Confirm Booking',
-                        onPressed: (){
-
-                          setState(() {
-                            _loading = true;
-                          });
-
+                        onPressed: () async {
                           if(_endTimestamp != null){
-                            confirmBooking();
+
+                            if(_endTimestamp - _startTimestamp > 1000*60*60*24*19){
+                              AlertBox().showErrorBox(context, 'You cannot book a product for more than 20 days');
+                            }else{
+                              bool canBook = true;
+                              for(var booking in widget.bookedSlots){
+                                if((_startTimestamp < booking['startTimestamp'] && _endTimestamp < booking['startTimestamp'])
+                                    || _startTimestamp > booking['endTimestamp']){
+                                  continue;
+                                }else{
+                                  canBook = false;
+                                }
+                              }
+                              if(canBook){
+                                await confirmBooking();
+                              }else{
+                                AlertBox().showErrorBox(context, 'The product is not available during the selected time period.');
+                              }
+                            }
+//
                           }else{
                             AlertBox().showErrorBox(context, 'Please select a duration first.');
                           }
-
-                          setState(() {
-                            _loading = false;
-                          });
                         },
                       ),
                     )
