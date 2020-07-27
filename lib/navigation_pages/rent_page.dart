@@ -97,7 +97,7 @@ class _RentPageState extends State<RentPage> {
     });
   }
 
-  void loadUserProducts() async {
+  Future<void> loadUserProducts() async {
     List<Widget> myList = [];
     int index = 0;
 
@@ -152,7 +152,6 @@ class _RentPageState extends State<RentPage> {
   void initState() {
     super.initState();
     _address = (userApi.address).split(',').toList();
-
     loadUserProducts();
   }
 
@@ -168,43 +167,46 @@ class _RentPageState extends State<RentPage> {
       child: Container(
         width: double.infinity,
         height: double.infinity,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 30.0, vertical: 10),
-                child: Row(
-                  textBaseline: TextBaseline.alphabetic,
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      'On Rent',
-                      style: TextStyle(
-                        color: kColorRed,
-                        fontSize: 36,
-                        fontFamily: 'Proxima Nova',
-                        fontWeight: FontWeight.w900,
+        child: RefreshIndicator(
+          onRefresh: loadUserProducts,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 30.0, vertical: 10),
+                  child: Row(
+                    textBaseline: TextBaseline.alphabetic,
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        'On Rent',
+                        style: TextStyle(
+                          color: kColorRed,
+                          fontSize: 36,
+                          fontFamily: 'Proxima Nova',
+                          fontWeight: FontWeight.w900,
+                        ),
                       ),
-                    ),
-                    IconButton(
-                      onPressed: (){
-                        Navigator.pushNamed(context,RentScreen.id);
-                      },
-                      icon: Icon(
-                        Icons.add_circle_outline,
-                        color: kColorRed,
-                      ),
-                    )
-                  ],
+                      IconButton(
+                        onPressed: (){
+                          Navigator.pushNamed(context,RentScreen.id);
+                        },
+                        icon: Icon(
+                          Icons.add_circle_outline,
+                          color: kColorRed,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              Column(
-                children: myProducts,
-              ),
-            ],
+                Column(
+                  children: myProducts,
+                ),
+              ],
+            ),
           ),
         ),
       ),
