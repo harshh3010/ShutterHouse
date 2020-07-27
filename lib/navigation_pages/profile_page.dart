@@ -130,7 +130,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 height: 15,
                               ),
                               Text(
-                                userApi.name, // TODO: change
+                                userApi.name,
                                 style: TextStyle(
                                   fontSize: 24,
                                   color: Colors.white,
@@ -150,7 +150,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     size: 16.0,
                                   ),
                                   Text(
-                                    '${_address[2]},${_address[4]}', //TODO: change
+                                    '${_address[2]},${_address[4]}',
                                     style: TextStyle(
                                       fontFamily: 'Proxima Nova',
                                       color: Colors.blueGrey.shade400,
@@ -167,7 +167,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[
                                   NumberLabel(
-                                    value: '⭐ ${userApi.rating}', // TODO: change
+                                    value: '⭐ ${userApi.rating}',
                                     label: 'RATING',
                                     valueColor: Colors.white,
                                     labelColor: Colors.blueGrey.shade400,

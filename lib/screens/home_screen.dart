@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shutterhouse/components/menu_option.dart';
 import 'package:shutterhouse/navigation_pages/profile_page.dart';
 import 'package:shutterhouse/navigation_pages/rent_page.dart';
@@ -89,14 +90,51 @@ class _HomeScreenState extends State<HomeScreen> {
               Navigator.pushNamed(context, EditProfileScreen.id);
               break;
             case 'item_help':
-              print('Help');
+              Alert(
+                context: context,
+                type: AlertType.info,
+                title: 'We\'re always there for you',
+                desc: 'For any queries, please mail us at harsh.gyanchandani@gmail.com',
+                buttons: [
+                  DialogButton(
+                    color: kColorRed,
+                    child: Text(
+                      'Okay',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    onPressed: (){
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              ).show();
               break;
             case 'item_about':
-              print('About');
+              Alert(
+                context: context,
+                type: AlertType.info,
+                title: 'About Us',
+                desc: 'This app has been created by Harsh Gyanchandani ©2020',
+                buttons: [
+                  DialogButton(
+                    color: kColorRed,
+                    child: Text(
+                      'Okay',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    onPressed: (){
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              ).show();
               break;
           }
-        }, //
-        // TODO: add methods
+        },
       );
     }
 
