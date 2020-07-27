@@ -2,11 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shutterhouse/components/review_card.dart';
+import 'package:shutterhouse/model/product.dart';
+import 'package:shutterhouse/screens/all_reviews_screen.dart';
 import 'package:shutterhouse/utilities/constants.dart';
 
 class ReviewsPage extends StatefulWidget {
   @override
   _ReviewsPageState createState() => _ReviewsPageState();
+
+  final Product product;
+  ReviewsPage({@required this.product});
 }
 
 class _ReviewsPageState extends State<ReviewsPage> {
@@ -32,13 +37,18 @@ class _ReviewsPageState extends State<ReviewsPage> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(
-                  'View All',
-                  style: TextStyle(
-                    fontFamily: 'Proxima Nova',
-                    color: Colors.grey.shade400,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold
+                GestureDetector(
+                  onTap: (){
+                    Navigator.push(context,MaterialPageRoute(builder: (context) => AllReviewsScreen(product: widget.product,)));
+                  },
+                  child: Text(
+                    'View All',
+                    style: TextStyle(
+                      fontFamily: 'Proxima Nova',
+                      color: Colors.grey.shade400,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold
+                    ),
                   ),
                 )
               ],

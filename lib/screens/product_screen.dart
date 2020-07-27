@@ -35,7 +35,7 @@ class _ProductScreenState extends State<ProductScreen> {
 
     Widget cardToDisplay;
     if(selectedButton == Selection.Reviews){
-      cardToDisplay = ReviewsPage();
+      cardToDisplay = ReviewsPage(product: widget.product,);
     }else{
       cardToDisplay = PriceCard(
         cost: widget.product.cost,
