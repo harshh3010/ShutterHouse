@@ -83,33 +83,35 @@ class _ProductScreenState extends State<ProductScreen> {
             bookingStatus = bookingStatus + "\t-> $startDate to $endDate\n";
           }
         }
-        Alert(
-          context: context,
-          type: AlertType.warning,
-          title: "Product Availability",
-          desc:
-              "The product you have selected is not available on following dates\n\n$bookingStatus",
-          buttons: [
-            DialogButton(
-              child: Text(
-                "Okay",
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => BookingScreen(
-                              product: widget.product,
-                              bookedSlots: bookedSlots,
-                            )));
-              },
-              color: kColorRed,
-              width: 120,
-            )
-          ],
-        ).show();
+        if(bookingStatus.isNotEmpty){
+          Alert(
+            context: context,
+            type: AlertType.warning,
+            title: "Product Availability",
+            desc:
+            "The product you have selected is not available on following dates\n\n$bookingStatus",
+            buttons: [
+              DialogButton(
+                child: Text(
+                  "Okay",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => BookingScreen(
+                            product: widget.product,
+                            bookedSlots: bookedSlots,
+                          )));
+                },
+                color: kColorRed,
+                width: 120,
+              )
+            ],
+          ).show();
+        }
       } else {
         Navigator.push(
             context,

@@ -26,9 +26,14 @@ class _HistoryCardState extends State<HistoryCard> {
         Center(
           child: Padding(
             padding: const EdgeInsets.all(80.0),
-            child: CircularProgressIndicator(
-              backgroundColor: Colors.white,
-              strokeWidth: 4,
+            child: Text(
+              'Nothing to show',
+              style: TextStyle(
+                fontFamily: 'Proxima Nova',
+                color: Colors.grey.shade500,
+                fontWeight: FontWeight.bold,
+                fontSize: 16
+              ),
             ),
           ),
         )
@@ -41,7 +46,14 @@ class _HistoryCardState extends State<HistoryCard> {
         if(booking.endTimestamp > DateTime.now().millisecondsSinceEpoch){
           continue;
         }else{
-          myList.add(BookingCard(booking: booking,));
+          myList.add(
+              BookingCard(
+                booking: booking,
+                onPressed: (){
+                  //TODO:CODE
+                },
+              ),
+          );
           setState(() {
             myBookings = myList;
           });

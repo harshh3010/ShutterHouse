@@ -60,6 +60,7 @@ class _ProfilePageState extends State<ProfilePage> {
     setState(() {
       myBookings = myList;
     });
+
   }
 
   @override
