@@ -7,6 +7,7 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shutterhouse/components/number_label.dart';
 import 'package:shutterhouse/components/price_card.dart';
 import 'package:shutterhouse/components/rents_button.dart';
+import 'package:shutterhouse/components/reviews_page.dart';
 import 'package:shutterhouse/model/product.dart';
 import 'package:shutterhouse/screens/booking_screen.dart';
 import 'package:shutterhouse/utilities/constants.dart';
@@ -19,83 +20,105 @@ class ProductScreen extends StatefulWidget {
 
   final Product product;
   final Image image;
-  ProductScreen({@required this.product,@required this.image});
+  ProductScreen({@required this.product, @required this.image});
 }
 
 class _ProductScreenState extends State<ProductScreen> {
-
   Selection selectedButton = Selection.Reviews;
   bool _loading = false;
+  int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-
     final DateFormat formatter = DateFormat('MMMM, d, yyyy');
 
-    Widget cardToDisplay;
-    if(selectedButton == Selection.Reviews){
-      cardToDisplay = Container(color: kColorRed,width: 150,height: 150,);
-    }else{
-      cardToDisplay = PriceCard(
+    List<Widget> cardsToDisplay = [
+      ReviewsPage(
+        product: widget.product,
+      ),
+      PriceCard(
         cost: widget.product.cost,
         discount: widget.product.discount,
-      );
-    }
-    
-    void checkAvailability() async {
+      ),
+    ];
 
+    void checkAvailability() async {
       setState(() {
         _loading = true;
       });
 
-     QuerySnapshot querySnapshot = await Firestore.instance.collection('Bookings')
+      QuerySnapshot querySnapshot = await Firestore.instance
+          .collection('Bookings')
           .document('${widget.product.city},${widget.product.country}')
           .collection(widget.product.category)
-          .where('productId',isEqualTo: widget.product.id)
+          .where('productId', isEqualTo: widget.product.id)
           .getDocuments();
 
-     if(querySnapshot.documents.length != 0){
-       String bookingStatus = "";
-       List<Map<String,int>> bookedSlots = [];
+      if (querySnapshot.documents.length != 0) {
+        String bookingStatus = "";
+        List<Map<String, int>> bookedSlots = [];
 
-       for(var snapshot in querySnapshot.documents){
-         if(snapshot.data['endTimestamp'] < DateTime.now().millisecondsSinceEpoch){
-           Navigator.push(context,MaterialPageRoute(builder: (context) => BookingScreen(product: widget.product,bookedSlots: [],)));
-         }else{
-            var startDate = formatter.format(DateTime.fromMillisecondsSinceEpoch(snapshot.data['startTimestamp']));
-            var endDate = formatter.format(DateTime.fromMillisecondsSinceEpoch(snapshot.data['endTimestamp']));
+        for (var snapshot in querySnapshot.documents) {
+          if (snapshot.data['endTimestamp'] <
+              DateTime.now().millisecondsSinceEpoch) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => BookingScreen(
+                          product: widget.product,
+                          bookedSlots: [],
+                        )));
+          } else {
+            var startDate = formatter.format(
+                DateTime.fromMillisecondsSinceEpoch(
+                    snapshot.data['startTimestamp']));
+            var endDate = formatter.format(DateTime.fromMillisecondsSinceEpoch(
+                snapshot.data['endTimestamp']));
 
             bookedSlots.add({
-              'startTimestamp' : snapshot.data['startTimestamp'],
-              'endTimestamp' : snapshot.data['endTimestamp'],
+              'startTimestamp': snapshot.data['startTimestamp'],
+              'endTimestamp': snapshot.data['endTimestamp'],
             });
 
             bookingStatus = bookingStatus + "\t-> $startDate to $endDate\n";
-         }
-       }
-       Alert(
-         context: context,
-         type: AlertType.warning,
-         title: "Product Availability",
-         desc: "The product you have selected is not available on following dates\n\n$bookingStatus",
-         buttons: [
-           DialogButton(
-             child: Text(
-               "Okay",
-               style: TextStyle(color: Colors.white, fontSize: 20),
-             ),
-             onPressed: (){
-               Navigator.pop(context);
-               Navigator.push(context,MaterialPageRoute(builder: (context) => BookingScreen(product: widget.product,bookedSlots: bookedSlots,)));
-               },
-             color: kColorRed,
-             width: 120,
-           )
-         ],
-       ).show();
-     }else{
-       Navigator.push(context,MaterialPageRoute(builder: (context) => BookingScreen(product: widget.product,bookedSlots: [],)));
-     }
+          }
+        }
+        Alert(
+          context: context,
+          type: AlertType.warning,
+          title: "Product Availability",
+          desc:
+              "The product you have selected is not available on following dates\n\n$bookingStatus",
+          buttons: [
+            DialogButton(
+              child: Text(
+                "Okay",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => BookingScreen(
+                              product: widget.product,
+                              bookedSlots: bookedSlots,
+                            )));
+              },
+              color: kColorRed,
+              width: 120,
+            )
+          ],
+        ).show();
+      } else {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => BookingScreen(
+                      product: widget.product,
+                      bookedSlots: [],
+                    )));
+      }
 
       setState(() {
         _loading = false;
@@ -116,11 +139,12 @@ class _ProductScreenState extends State<ProductScreen> {
             backgroundColor: Colors.white,
             elevation: 0,
             leading: IconButton(
-              onPressed: (){
+              onPressed: () {
                 Navigator.pop(context);
               },
               icon: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0,vertical: 0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24.0, vertical: 0),
                 child: Icon(
                   Icons.arrow_back_ios,
                   color: Colors.grey.shade800,
@@ -162,9 +186,11 @@ class _ProductScreenState extends State<ProductScreen> {
                                 Row(
                                   children: <Widget>[
                                     Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 10),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 30, vertical: 10),
                                       child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
                                         children: <Widget>[
                                           NumberLabel(
                                             value: '${widget.product.rents}',
@@ -186,7 +212,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                     ),
                                     Expanded(
                                       child: Padding(
-                                        padding: const EdgeInsets.fromLTRB(30, 10, 0, 0),
+                                        padding: const EdgeInsets.fromLTRB(
+                                            30, 10, 0, 0),
                                         child: Hero(
                                           tag: '${widget.product.id}',
                                           child: widget.image,
@@ -196,7 +223,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                   ],
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 10),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 30, vertical: 10),
                                   child: Hero(
                                     tag: '${widget.product.id}--NAME',
                                     child: Text(
@@ -212,7 +240,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 5),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 30, vertical: 5),
                                   child: Text(
                                     widget.product.description,
                                     style: TextStyle(
@@ -231,15 +260,15 @@ class _ProductScreenState extends State<ProductScreen> {
                           bottom: 10,
                           left: 0,
                           child: Padding(
-                            padding:
-                            EdgeInsets.symmetric(vertical: 0, horizontal: 30.0),
+                            padding: EdgeInsets.symmetric(
+                                vertical: 0, horizontal: 30.0),
                             child: Container(
                                 width: MediaQuery.of(context).size.width - 60.0,
                                 padding: EdgeInsets.all(8),
                                 decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius:
-                                    BorderRadius.all(Radius.circular(30.0)),
+                                        BorderRadius.all(Radius.circular(30.0)),
                                     boxShadow: [
                                       BoxShadow(
                                         color: Colors.black.withOpacity(0.1),
@@ -252,10 +281,12 @@ class _ProductScreenState extends State<ProductScreen> {
                                       onPressed: () {
                                         setState(() {
                                           selectedButton = Selection.Reviews;
+                                          _currentIndex = 0;
                                         });
                                       },
                                       label: 'Reviews',
-                                      isActive: selectedButton == Selection.Reviews ,
+                                      isActive:
+                                          selectedButton == Selection.Reviews,
                                     ),
                                     SizedBox(
                                       width: 8,
@@ -264,10 +295,12 @@ class _ProductScreenState extends State<ProductScreen> {
                                       onPressed: () {
                                         setState(() {
                                           selectedButton = Selection.Price;
+                                          _currentIndex = 1;
                                         });
                                       },
                                       label: 'Price',
-                                      isActive: selectedButton == Selection.Price,
+                                      isActive:
+                                          selectedButton == Selection.Price,
                                     ),
                                   ],
                                 )),
@@ -278,15 +311,20 @@ class _ProductScreenState extends State<ProductScreen> {
                     SizedBox(
                       height: 15,
                     ),
-                    cardToDisplay,
+                    Expanded(
+                      child: IndexedStack(
+                        index: _currentIndex,
+                        children: cardsToDisplay,
+                      ),
+                    ),
                   ],
                 ),
               ),
             ],
           ),
           bottomNavigationBar: GestureDetector(
-            onTap: (){
-            checkAvailability();
+            onTap: () {
+              checkAvailability();
             },
             child: Container(
               decoration: BoxDecoration(
@@ -297,24 +335,23 @@ class _ProductScreenState extends State<ProductScreen> {
                   bottomRight: Radius.zero,
                   bottomLeft: Radius.zero,
                 ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 5.0,
-                    ),
-                  ],
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 5.0,
+                  ),
+                ],
               ),
               height: 80,
               child: Center(
                 child: Text(
                   'CHECK AVAILABILITY',
                   style: TextStyle(
-                    fontFamily: 'Proxima Nova',
-                    fontSize: 20,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 2
-                  ),
+                      fontFamily: 'Proxima Nova',
+                      fontSize: 20,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 2),
                 ),
               ),
             ),
