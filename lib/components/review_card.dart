@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:shutterhouse/model/review.dart';
 import 'package:shutterhouse/utilities/constants.dart';
 
 class ReviewCard extends StatelessWidget {
 
-  final String name,text,imageUrl;
-  ReviewCard({@required this.name,@required this.text,@required this.imageUrl});
+  final Review review;
+  ReviewCard({@required this.review});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,7 @@ class ReviewCard extends StatelessWidget {
               ),
               image: DecorationImage(
                 image: NetworkImage(
-                    imageUrl
+                    review.imageUrl
                 ),
                 fit: BoxFit.cover,
               ),
@@ -38,7 +39,7 @@ class ReviewCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  name,
+                  review.name,
                   style: TextStyle(
                     color: Colors.grey.shade800,
                     fontFamily: 'Proxima Nova',
@@ -48,7 +49,7 @@ class ReviewCard extends StatelessWidget {
                 ),
                 SizedBox(height: 5,),
                 Text(
-                  text,
+                  review.message,
                   style: TextStyle(
                     color: Colors.grey.shade500,
                     fontFamily: 'Proxima Nova',

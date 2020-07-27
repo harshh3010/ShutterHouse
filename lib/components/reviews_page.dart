@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shutterhouse/components/review_card.dart';
 import 'package:shutterhouse/model/product.dart';
+import 'package:shutterhouse/model/review.dart';
 import 'package:shutterhouse/screens/all_reviews_screen.dart';
 import 'package:shutterhouse/utilities/constants.dart';
 
@@ -15,6 +17,64 @@ class ReviewsPage extends StatefulWidget {
 }
 
 class _ReviewsPageState extends State<ReviewsPage> {
+
+  List<Widget> reviewsList = [
+    Center(
+      child: Padding(
+        padding: const EdgeInsets.all(80.0),
+        child: CircularProgressIndicator(
+          backgroundColor: Colors.white,
+          strokeWidth: 4,
+        ),
+      ),
+    ),
+  ];
+  
+  void loadReviews() async {
+    QuerySnapshot querySnapshot = await Firestore.instance.collection('Reviews and Rating')
+        .document('${widget.product.city},${widget.product.country}')
+        .collection(widget.product.category)
+        .document(widget.product.id)
+        .collection('Reviews')
+        .getDocuments();
+
+    List<ReviewCard> myList = [];
+    int n = 0;
+
+    for(var snapshot in querySnapshot.documents){
+      Review review = Review(
+        imageUrl: snapshot.data['imageUrl'],
+        name: snapshot.data['name'],
+        message: snapshot.data['message'],
+        productId: snapshot.data['productId'],
+        customerEmail: snapshot.data['customerEmail'],
+        country: snapshot.data['country'],
+        city: snapshot.data['city'],
+        category: snapshot.data['category'],
+      );
+      myList.add(ReviewCard(review: review,));
+
+      setState(() {
+        reviewsList = myList;
+      });
+
+      n++;
+      if(n==2){
+        break;
+      }
+    }
+
+    setState(() {
+      reviewsList = myList;
+    });
+  }
+
+  @override
+  void initState() {
+        super.initState();
+        loadReviews();
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -56,16 +116,9 @@ class _ReviewsPageState extends State<ReviewsPage> {
             SizedBox(
               height: 15,
             ),
-            ReviewCard(
-              name: 'Harsh Gyanchandani',
-              imageUrl: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-              text: 'This product is awesome... I rented it for a family trip, the photos and videos i clicked were simply amazinggg!',
-            ),
-            ReviewCard(
-              name: 'Harsh Gyanchandani',
-              imageUrl: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-              text: 'This product is awesome... I rented it for a family trip, the photos and videos i clicked were simply amazinggg!',
-            ),
+            Column(
+              children: reviewsList,
+            )
           ],
         ),
       ),

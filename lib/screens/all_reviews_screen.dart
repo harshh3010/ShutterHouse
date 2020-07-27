@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:shutterhouse/components/alert_box.dart';
+import 'package:shutterhouse/components/review_card.dart';
 import 'package:shutterhouse/components/rounded_button.dart';
 import 'package:shutterhouse/components/text_input_decoration.dart';
 import 'package:shutterhouse/model/product.dart';
@@ -26,6 +27,17 @@ class _AllReviewsScreenState extends State<AllReviewsScreen> {
   TextEditingController _messageController = TextEditingController();
   double _rating = 3;
   bool _loading = false;
+  List<Widget> reviewsList = [
+    Center(
+      child: Padding(
+        padding: const EdgeInsets.all(80.0),
+        child: CircularProgressIndicator(
+          backgroundColor: Colors.white,
+          strokeWidth: 4,
+        ),
+      ),
+    ),
+  ];
 
   Future<void> submitReview() async {
 
@@ -36,6 +48,8 @@ class _AllReviewsScreenState extends State<AllReviewsScreen> {
       customerEmail: userApi.email,
       productId: widget.product.id,
       message: _messageController.text,
+      name: userApi.name,
+      imageUrl: userApi.dpURL,
     );
 
     await Firestore.instance.collection('Reviews and Rating')
@@ -71,6 +85,45 @@ class _AllReviewsScreenState extends State<AllReviewsScreen> {
       AlertBox().showErrorBox(context, error.message);
     });
 
+  }
+
+  void loadReviews() async {
+    QuerySnapshot querySnapshot = await Firestore.instance.collection('Reviews and Rating')
+        .document('${widget.product.city},${widget.product.country}')
+        .collection(widget.product.category)
+        .document(widget.product.id)
+        .collection('Reviews')
+        .getDocuments();
+
+    List<ReviewCard> myList = [];
+
+    for(var snapshot in querySnapshot.documents){
+      Review review = Review(
+        imageUrl: snapshot.data['imageUrl'],
+        name: snapshot.data['name'],
+        message: snapshot.data['message'],
+        productId: snapshot.data['productId'],
+        customerEmail: snapshot.data['customerEmail'],
+        country: snapshot.data['country'],
+        city: snapshot.data['city'],
+        category: snapshot.data['category'],
+      );
+      myList.add(ReviewCard(review: review,));
+
+      setState(() {
+        reviewsList = myList;
+      });
+    }
+
+    setState(() {
+      reviewsList = myList;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadReviews();
   }
 
   @override
@@ -112,6 +165,15 @@ class _AllReviewsScreenState extends State<AllReviewsScreen> {
               ),
             ),
             centerTitle: true,
+          ),
+          body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 0),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: reviewsList,
+              ),
+            ),
           ),
           bottomNavigationBar: GestureDetector(
             onTap: () {
