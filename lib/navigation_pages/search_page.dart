@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:shutterhouse/components/best_offer_card.dart';
 import 'package:shutterhouse/components/category_card.dart';
 import 'package:shutterhouse/components/category_list.dart';
@@ -20,13 +19,16 @@ class _SearchPageState extends State<SearchPage> {
 
   List<String> _address;
   UserApi userApi = UserApi.instance;
-  List<Widget> availableCategories = [
+  List<Widget> categoryCards = [
     SizedBox(width: 30.0,),
     LoadingCard(),
     LoadingCard(),
     LoadingCard(),
     LoadingCard(),
   ];
+  List<Category> availableCategories = [];
+  List<Widget> displayedCategories;
+  String filter;
 
   Future<void> loadCategories() async{
 
@@ -38,6 +40,7 @@ class _SearchPageState extends State<SearchPage> {
      if(snapshot.documents.length == 0){
        continue;
      }else{
+       availableCategories.add(category);
        myList.add(CategoryCard(
          category: category.name,
          imagePath: 'images/${category.id}.png',
@@ -49,13 +52,12 @@ class _SearchPageState extends State<SearchPage> {
     }
 
     setState(() {
-      availableCategories = myList;
+      categoryCards = myList;
     });
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     _address = (userApi.address).split(',').toList();
@@ -64,6 +66,10 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    if(filter == null){
+      displayedCategories = categoryCards;
+    }
 
     return Container(
         width: double.infinity,
@@ -109,6 +115,31 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                   SearchBox(
                     hint: 'Try Lens',
+                    onChanged: (value){
+                      if(value.toString().trim().isEmpty){
+                        setState(() {
+                          filter = null;
+                        });
+                      }else{
+                        filter = value.toString().toLowerCase();
+                        List<Category> filteredList = availableCategories.where((category) => category.name.toLowerCase().contains(filter)).toList();
+                        List<Widget> myList = [SizedBox(width: 30.0,),];
+                        for(var category in filteredList){
+                          myList.add(
+                            CategoryCard(
+                              category: category.name,
+                              imagePath: 'images/${category.id}.png',
+                              onPressed: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryScreen(category: category.name,category_id: category.id,)));
+                              },
+                            ),
+                          );
+                        }
+                        setState(() {
+                          displayedCategories = myList;
+                        });
+                      }
+                    },
                   ),
                   SizedBox(
                     height: 25,
@@ -116,7 +147,7 @@ class _SearchPageState extends State<SearchPage> {
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
-                      children: availableCategories,
+                      children: displayedCategories,
                     ),
                   ),
                   SizedBox(

@@ -4,7 +4,8 @@ import 'package:shutterhouse/utilities/constants.dart';
 class SearchBox extends StatelessWidget {
 
   final String hint;
-  SearchBox({@required this.hint});
+  final Function onChanged;
+  SearchBox({@required this.hint,@required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +27,7 @@ class SearchBox extends StatelessWidget {
                   ]),
               child: Center(
                 child: TextField(
+                  onChanged: onChanged,
                   textAlignVertical: TextAlignVertical.center,
                   cursorColor: kColorRed,
                   decoration: InputDecoration(

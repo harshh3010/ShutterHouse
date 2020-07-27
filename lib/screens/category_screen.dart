@@ -125,6 +125,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
               ),
               SearchBox(
                 hint: 'Search for a product',
+                onChanged: (value){
+                  //TODO :CODE
+                },
               ),
               SizedBox(
                 height: 15,
