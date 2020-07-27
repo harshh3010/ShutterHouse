@@ -16,7 +16,10 @@ class CategoryScreen extends StatefulWidget {
 }
 
 class _CategoryScreenState extends State<CategoryScreen> {
-  List<Widget> availableProducts = [
+
+  UserApi userApi = UserApi.instance;
+  List<String> _address;
+  List<Widget> productCards = [
     Center(
       child: Padding(
         padding: const EdgeInsets.all(80.0),
@@ -27,8 +30,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
       ),
     ),
   ];
-  UserApi userApi = UserApi.instance;
-  List<String> _address;
+  List<Product> availableProducts = [];
+  List<Widget> displayedProducts;
+  String filter;
 
   void loadProducts() async {
     List<ProductCard> myList = [];
@@ -55,6 +59,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
         rents: snapshot.data['rents'],
       );
 
+      availableProducts.add(product);
       myList.add(
         ProductCard(
           product: product,
@@ -71,13 +76,12 @@ class _CategoryScreenState extends State<CategoryScreen> {
       );
     }
     setState(() {
-      availableProducts = myList;
+      productCards = myList;
     });
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _address = (userApi.address).split(',').toList();
     loadProducts();
@@ -85,6 +89,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    if(filter == null){
+      displayedProducts = productCards;
+    }
+
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -117,37 +126,69 @@ class _CategoryScreenState extends State<CategoryScreen> {
         body: Container(
           width: double.infinity,
           height: double.infinity,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              SizedBox(
-                height: 15,
-              ),
-              SearchBox(
-                hint: 'Search for a product',
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                child: Text(
-                  'Your Options',
-                  style: TextStyle(
-                    color: Colors.grey.shade800,
-                    fontSize: 30,
-                    fontFamily: 'Proxima Nova',
-                    fontWeight: FontWeight.w900,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                SizedBox(
+                  height: 15,
+                ),
+                SearchBox(
+                  hint: 'Search for a product',
+                  onChanged: (value){
+                    if(value.toString().trim().isEmpty){
+                      setState(() {
+                        filter = null;
+                      });
+                    }else{
+                      filter = value.toString().toLowerCase();
+                      List<Product> filteredList = availableProducts.where((product) => product.name.toLowerCase().contains(filter)).toList();
+                      List<Widget> myList = [];
+                      for(var product in filteredList){
+                        myList.add(
+                          ProductCard(
+                            product: product,
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ProductScreen(
+                                        product: product,
+                                        image: Image.network(product.imageURL),
+                                      )));
+                            },
+                          ),
+                        );
+                      }
+                      setState(() {
+                        displayedProducts = myList;
+                      });
+                    }
+                  },
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                  child: Text(
+                    'Your Options',
+                    style: TextStyle(
+                      color: Colors.grey.shade800,
+                      fontSize: 30,
+                      fontFamily: 'Proxima Nova',
+                      fontWeight: FontWeight.w900,
+                    ),
                   ),
                 ),
-              ),
-              SingleChildScrollView(
-                child: Column(
-                  children: availableProducts,
-                ),
-              )
-            ],
+                SingleChildScrollView(
+                  child: Column(
+                    children: displayedProducts,
+                  ),
+                )
+              ],
+            ),
           ),
         ));
   }
