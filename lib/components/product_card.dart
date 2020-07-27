@@ -77,6 +77,15 @@ class ProductCard extends StatelessWidget {
                             ),
                           ),
                           Text(
+                            '${product.discount}% off',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontFamily: 'Proxima Nova',
+                              fontWeight: FontWeight.w900,
+                              color: kColorRed,
+                            ),
+                          ),
+                          Text(
                             '⭐ ${product.rating}',
                             style: TextStyle(
                               fontSize: 16,
