@@ -2,10 +2,12 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shutterhouse/screens/best_offers_screen.dart';
 import 'package:shutterhouse/screens/details_screen.dart';
 import 'package:shutterhouse/screens/edit_profile_screen.dart';
 import 'package:shutterhouse/screens/home_screen.dart';
 import 'package:shutterhouse/screens/login_screen.dart';
+import 'package:shutterhouse/screens/notification_screen.dart';
 import 'package:shutterhouse/screens/registration_screen.dart';
 import 'package:shutterhouse/screens/rent_screen.dart';
 import 'package:shutterhouse/screens/splash_screen.dart';
@@ -42,6 +44,8 @@ class MyApp extends StatelessWidget {
         DetailsScreen.id : (context) => DetailsScreen(),
         EditProfileScreen.id : (context) => EditProfileScreen(),
         RentScreen.id : (context) => RentScreen(),
+        NotificationScreen.id : (context) => NotificationScreen(),
+        BestOffersScreen.id : (context) => BestOffersScreen(),
       },
     );
   }

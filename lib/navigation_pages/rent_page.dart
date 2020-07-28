@@ -3,10 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shutterhouse/components/alert_box.dart';
 import 'package:shutterhouse/components/category_list.dart';
 import 'package:shutterhouse/components/menu_option.dart';
 import 'package:shutterhouse/components/product_card.dart';
+import 'package:shutterhouse/components/rounded_button.dart';
+import 'package:shutterhouse/components/text_input_decoration.dart';
 import 'package:shutterhouse/model/product.dart';
 import 'package:shutterhouse/screens/rent_screen.dart';
 import 'package:shutterhouse/utilities/constants.dart';
@@ -25,6 +28,7 @@ class _RentPageState extends State<RentPage> {
   var _count = 0;
   var _tapPosition;
   bool _loading = false;
+  double _discount = 0;
   List<Widget> myProducts = [
     Center(
       child: Padding(
@@ -36,8 +40,25 @@ class _RentPageState extends State<RentPage> {
       ),
     ),
   ];
-  
-  void removeProduct(Product product) async {
+
+  Future<void> addDiscount(Product product) async{
+    await Firestore.instance.collection('Products')
+        .document('${product.city},${product.country}')
+        .collection(product.category)
+        .document(product.id)
+        .updateData({'discount':_discount}).then((value){
+          Scaffold.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Discount added!'),
+              duration: Duration(seconds: 3),
+            ),
+          );
+    }).catchError((error){
+      AlertBox().showErrorBox(context, error.message);
+    });
+  }
+
+  Future<void> removeProduct(Product product) async {
     await Firestore.instance.collection('Products')
         .document('${_address[2]},${_address[4]}')
         .collection(product.category)
@@ -83,7 +104,65 @@ class _RentPageState extends State<RentPage> {
       ],
     ).then((value) async {
       switch(value){
-        case 'item_discount' : //TODO : CODE
+        case 'item_discount' :
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => Dialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              child: Container(
+                padding: EdgeInsets.all(30),
+                width: double.infinity,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      'Add a discount',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'Proxima Nova',
+                        fontSize: 16,
+                        color: Colors.grey.shade800,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 25,
+                    ),
+                    TextField(
+                      keyboardType: TextInputType.numberWithOptions(),
+                      onChanged: (value){
+                        _discount = double.parse(value);
+                      },
+                      decoration: textInputDecoration(
+                          color: kColorRed,
+                          hint: 'Enter discount (%)',
+                          showError: false,
+                          icon: Icons.local_offer),
+                    ),
+                    SizedBox(
+                      height: 25,
+                    ),
+                    RoundedButton(
+                      color: kColorRed,
+                      text: 'Submit',
+                      onPressed: () async {
+                        Navigator.pop(context);
+                        setState(() {
+                          _loading = true;
+                        });
+                        await addDiscount(product);
+                        setState(() {
+                          _loading = false;
+                        });
+                      },
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
           break;
         case 'item_remove' :
           setState(() {
@@ -97,9 +176,8 @@ class _RentPageState extends State<RentPage> {
     });
   }
 
-  void loadUserProducts() async {
+  Future<void> loadUserProducts() async {
     List<Widget> myList = [];
-    int index = 0;
 
     for(var category in CategoryList.getCategories()){
       QuerySnapshot querySnapshot = await Firestore.instance
@@ -138,7 +216,6 @@ class _RentPageState extends State<RentPage> {
               ),
             ),
         );
-        index ++;
       }
     }
 
@@ -152,7 +229,6 @@ class _RentPageState extends State<RentPage> {
   void initState() {
     super.initState();
     _address = (userApi.address).split(',').toList();
-
     loadUserProducts();
   }
 
@@ -168,8 +244,14 @@ class _RentPageState extends State<RentPage> {
       child: Container(
         width: double.infinity,
         height: double.infinity,
-        child: SingleChildScrollView(
-          child: Column(
+        child: RefreshIndicator(
+          onRefresh: loadUserProducts,
+          child: CustomScrollView(
+            slivers: <Widget>[
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: Column(
+            mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Padding(
@@ -204,6 +286,9 @@ class _RentPageState extends State<RentPage> {
               Column(
                 children: myProducts,
               ),
+            ],
+          ),
+              )
             ],
           ),
         ),

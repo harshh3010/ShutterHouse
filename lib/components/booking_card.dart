@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shutterhouse/model/booking.dart';
+import 'package:shutterhouse/utilities/constants.dart';
 
 class BookingCard extends StatelessWidget {
 
   final Booking booking;
-  BookingCard({@required this.booking});
+  final Function onPressed;
+  final IconData icon;
+  BookingCard({@required this.booking,@required this.onPressed,this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -61,37 +64,43 @@ class BookingCard extends StatelessWidget {
                           color: Colors.grey.shade800,
                         ),
                       ),
-                      Icon(
-                        //TODO : Add action
-                        Icons.more_vert,
-                        color: Colors.grey.shade800,
+                      GestureDetector(
+                        child: IconButton(
+                          onPressed: onPressed,
+                          icon: Icon(
+                            icon,
+                            color: kColorRed,
+                          ),
+                        ),
                       ),
                     ],
                   ),
                   SizedBox(
                     height: 15,
                   ),
-                  Row(
-                    children: <Widget>[
-                      Image(
-                        image: NetworkImage(booking.imageUrl),
-                        width: 80,
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Text(
-                            '$startDate to $endDate',
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontFamily: 'Proxima Nova',
-                              fontWeight: FontWeight.w900,
-                              color: Colors.grey.shade400,
+                  Expanded(
+                    child: Row(
+                      children: <Widget>[
+                        Image(
+                          image: NetworkImage(booking.imageUrl),
+                          width: 80,
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(
+                              '$startDate to $endDate',
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontFamily: 'Proxima Nova',
+                                fontWeight: FontWeight.w900,
+                                color: Colors.grey.shade400,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),
