@@ -12,6 +12,7 @@ import 'package:shutterhouse/navigation_pages/profile_page.dart';
 import 'package:shutterhouse/navigation_pages/rent_page.dart';
 import 'package:shutterhouse/navigation_pages/search_page.dart';
 import 'package:shutterhouse/screens/edit_profile_screen.dart';
+import 'package:shutterhouse/screens/notification_screen.dart';
 import 'package:shutterhouse/screens/welcome_screen.dart';
 import 'package:shutterhouse/utilities/constants.dart';
 import 'package:shutterhouse/utilities/user_api.dart';
@@ -176,11 +177,16 @@ class _HomeScreenState extends State<HomeScreen> {
             leading: showOptions(),
             actions: <Widget>[
               Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Icon(
-                  Icons.notifications,
-                  color: appBarIconColor,
-                ),
+                padding: const EdgeInsets.all(15),
+                child: IconButton(
+                  onPressed: (){
+                    Navigator.pushNamed(context,NotificationScreen.id);
+                  },
+                  icon: Icon(
+                    Icons.notifications,
+                    color: appBarIconColor,
+                  ),
+                )
               ),
             ],
           ),

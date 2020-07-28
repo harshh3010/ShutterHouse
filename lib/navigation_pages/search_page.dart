@@ -7,6 +7,7 @@ import 'package:shutterhouse/components/loading_card.dart';
 import 'package:shutterhouse/components/product_card.dart';
 import 'package:shutterhouse/components/search_box.dart';
 import 'package:shutterhouse/model/category.dart';
+import 'package:shutterhouse/screens/best_offers_screen.dart';
 import 'package:shutterhouse/screens/category_screen.dart';
 import 'package:shutterhouse/utilities/constants.dart';
 import 'package:shutterhouse/utilities/user_api.dart';
@@ -175,13 +176,18 @@ class _SearchPageState extends State<SearchPage> {
                               fontWeight: FontWeight.w900,
                             ),
                           ),
-                          Text(
-                            'View All',
-                            style: TextStyle(
-                              color: Colors.grey.shade500,
-                              fontSize: 20,
-                              fontFamily: 'Proxima Nova',
-                              fontWeight: FontWeight.w900,
+                          GestureDetector(
+                            onTap: (){
+                              Navigator.pushNamed(context, BestOffersScreen.id);
+                            },
+                            child: Text(
+                              'View All',
+                              style: TextStyle(
+                                color: Colors.grey.shade500,
+                                fontSize: 20,
+                                fontFamily: 'Proxima Nova',
+                                fontWeight: FontWeight.w900,
+                              ),
                             ),
                           ),
                         ],
