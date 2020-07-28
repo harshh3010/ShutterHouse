@@ -1,14 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:shutterhouse/components/best_offer_card.dart';
 import 'package:shutterhouse/components/category_card.dart';
 import 'package:shutterhouse/components/category_list.dart';
 import 'package:shutterhouse/components/loading_card.dart';
 import 'package:shutterhouse/components/product_card.dart';
 import 'package:shutterhouse/components/search_box.dart';
 import 'package:shutterhouse/model/category.dart';
+import 'package:shutterhouse/model/product.dart';
 import 'package:shutterhouse/screens/best_offers_screen.dart';
 import 'package:shutterhouse/screens/category_screen.dart';
+import 'package:shutterhouse/screens/product_screen.dart';
 import 'package:shutterhouse/utilities/constants.dart';
 import 'package:shutterhouse/utilities/user_api.dart';
 
@@ -23,11 +24,63 @@ class _SearchPageState extends State<SearchPage> {
   UserApi userApi = UserApi.instance;
   List<Widget> categoryCards;
   List<Category> availableCategories = [];
+  List<Product> offerProducts = [];
+  Widget bestOffer = Center(
+    child: CircularProgressIndicator(
+      backgroundColor: Colors.white,
+      strokeWidth: 4,
+    ),
+  );
   List<Widget> displayedCategories;
   String filter;
 
-  Future<void> loadCategories() async{
+  Future<void> loadOffers() async{
+    for(var category in CategoryList.getCategories()){
+      QuerySnapshot querySnapshot = await Firestore.instance.collection('Products')
+          .document('${_address[2]},${_address[4]}')
+          .collection(category.id)
+          .where('discount',isGreaterThan: 0)
+          .getDocuments();
+      for(var snapshot in querySnapshot.documents){
+        Product product = Product(
+          id: snapshot.data['id'],
+          name: snapshot.data['name'],
+          description: snapshot.data['description'],
+          cost: snapshot.data['cost'],
+          category: snapshot.data['category'],
+          city: snapshot.data['city'],
+          country: snapshot.data['country'],
+          discount: snapshot.data['discount'],
+          imageURL: snapshot.data['imageUrl'],
+          ownerEmail: snapshot.data['ownerEmail'],
+          ownerName: snapshot.data['ownerName'],
+          rating: snapshot.data['rating'],
+          reviews: snapshot.data['reviews'],
+          rents: snapshot.data['rents'],
+        );
+        offerProducts.add(product);
+      }
+    }
 
+    offerProducts.sort( (a,b) => b.discount.compareTo(a.discount) );
+
+    setState(() {
+      bestOffer = ProductCard(
+        product: offerProducts[0],
+        onPressed: (){
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ProductScreen(
+                    product: offerProducts[0],
+                    image: Image.network(offerProducts[0].imageURL),
+                  )));
+        },
+      );
+    });
+  }
+
+  Future<void> loadCategories() async{
     categoryCards = [
       SizedBox(width: 30.0,),
       LoadingCard(),
@@ -35,7 +88,6 @@ class _SearchPageState extends State<SearchPage> {
       LoadingCard(),
       LoadingCard(),
     ];
-
     List<Widget> myList = [];
     myList.add(SizedBox(width: 30.0));
 
@@ -54,7 +106,6 @@ class _SearchPageState extends State<SearchPage> {
        ));
      }
     }
-
     setState(() {
       categoryCards = myList;
     });
@@ -66,6 +117,7 @@ class _SearchPageState extends State<SearchPage> {
 
     _address = (userApi.address).split(',').toList();
     loadCategories();
+    loadOffers();
   }
 
   @override
@@ -178,7 +230,12 @@ class _SearchPageState extends State<SearchPage> {
                           ),
                           GestureDetector(
                             onTap: (){
-                              Navigator.pushNamed(context, BestOffersScreen.id);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BestOffersScreen(offerList: offerProducts,),
+                                ),
+                              );
                             },
                             child: Text(
                               'View All',
@@ -196,13 +253,11 @@ class _SearchPageState extends State<SearchPage> {
                     SizedBox(
                       height: 15,
                     ),
-                    BestOfferCard(
-                      name: 'Name of the product',
-                      cost: 2000,
-                      discount: .5,
-                      url:
-                          'https://pluspng.com/img-png/nikon-png-black-nikon-black-nikon-camera-png-image-260.jpg',
-                    ),
+                    Expanded(
+                      child: Container(
+                        child: bestOffer,
+                      ),
+                    )
                   ],
                 ),
               )

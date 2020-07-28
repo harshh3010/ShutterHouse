@@ -66,12 +66,9 @@ class ProductCard extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Hero(
-                  tag: '${product.id}',
-                  child: Image(
-                    image: NetworkImage(product.imageURL),
-                    width: 100,
-                  ),
+                Image(
+                  image: NetworkImage(product.imageURL),
+                  width: 100,
                 ),
                 SizedBox(
                   width: 15,
@@ -83,17 +80,14 @@ class ProductCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       mainAxisSize: MainAxisSize.max,
                       children: <Widget>[
-                        Hero(
-                          tag: '${product.id}--NAME',
-                          child: Text(
-                            product.name,
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontFamily: 'Proxima Nova',
-                              fontWeight: FontWeight.w900,
-                              color: Colors.grey.shade800,
-                                decoration: TextDecoration.none,
-                            ),
+                        Text(
+                          product.name,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: 'Proxima Nova',
+                            fontWeight: FontWeight.w900,
+                            color: Colors.grey.shade800,
+                              decoration: TextDecoration.none,
                           ),
                         ),
                         Row(
