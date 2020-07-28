@@ -85,8 +85,10 @@ class _BestOffersScreenState extends State<BestOffersScreen> {
             ),
           ),
         ),
-        body: Column(
-          children: offerCards,
+        body: SingleChildScrollView(
+          child: Column(
+            children: offerCards,
+          ),
         ),
       ),
     );

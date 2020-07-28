@@ -11,11 +11,12 @@ class Booking{
   String country;
   String productName;
   String category;
+  String contactNo;
 
 
   Booking({this.id, this.productId, this.startTimestamp, this.endTimestamp,
       this.ownerEmail, this.customerEmail, this.cost, this.imageUrl, this.city,
-      this.country, this.productName, this.category});
+      this.country, this.productName, this.category,this.contactNo});
 
   Map<String,Object> getBookingData(){
     return {
@@ -31,6 +32,7 @@ class Booking{
       'country' : country,
       'productName' : productName,
       'category' : category,
+      'contactNo' : contactNo,
     };
   }
 

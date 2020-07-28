@@ -12,6 +12,7 @@ class User{
   int reviews;
 
 
+
   User({this.name, this.address, this.phoneNo, this.latitude,
       this.longitude, this.email, this.dpURL, this.rating, this.rents,
       this.reviews});

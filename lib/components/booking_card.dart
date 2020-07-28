@@ -55,13 +55,15 @@ class BookingCard extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Text(
-                        booking.productName,
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontFamily: 'Proxima Nova',
-                          fontWeight: FontWeight.w900,
-                          color: Colors.grey.shade800,
+                      Expanded(
+                        child: Text(
+                          booking.productName,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: 'Proxima Nova',
+                            fontWeight: FontWeight.w900,
+                            color: Colors.grey.shade800,
+                          ),
                         ),
                       ),
                       GestureDetector(
