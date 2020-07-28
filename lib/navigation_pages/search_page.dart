@@ -4,6 +4,7 @@ import 'package:shutterhouse/components/best_offer_card.dart';
 import 'package:shutterhouse/components/category_card.dart';
 import 'package:shutterhouse/components/category_list.dart';
 import 'package:shutterhouse/components/loading_card.dart';
+import 'package:shutterhouse/components/product_card.dart';
 import 'package:shutterhouse/components/search_box.dart';
 import 'package:shutterhouse/model/category.dart';
 import 'package:shutterhouse/screens/category_screen.dart';

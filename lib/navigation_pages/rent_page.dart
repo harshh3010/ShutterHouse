@@ -246,44 +246,50 @@ class _RentPageState extends State<RentPage> {
         height: double.infinity,
         child: RefreshIndicator(
           onRefresh: loadUserProducts,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 30.0, vertical: 10),
-                  child: Row(
-                    textBaseline: TextBaseline.alphabetic,
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        'On Rent',
-                        style: TextStyle(
-                          color: kColorRed,
-                          fontSize: 36,
-                          fontFamily: 'Proxima Nova',
-                          fontWeight: FontWeight.w900,
-                        ),
+          child: CustomScrollView(
+            slivers: <Widget>[
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: Column(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 30.0, vertical: 10),
+                child: Row(
+                  textBaseline: TextBaseline.alphabetic,
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      'On Rent',
+                      style: TextStyle(
+                        color: kColorRed,
+                        fontSize: 36,
+                        fontFamily: 'Proxima Nova',
+                        fontWeight: FontWeight.w900,
                       ),
-                      IconButton(
-                        onPressed: (){
-                          Navigator.pushNamed(context,RentScreen.id);
-                        },
-                        icon: Icon(
-                          Icons.add_circle_outline,
-                          color: kColorRed,
-                        ),
-                      )
-                    ],
-                  ),
+                    ),
+                    IconButton(
+                      onPressed: (){
+                        Navigator.pushNamed(context,RentScreen.id);
+                      },
+                      icon: Icon(
+                        Icons.add_circle_outline,
+                        color: kColorRed,
+                      ),
+                    )
+                  ],
                 ),
-                Column(
-                  children: myProducts,
-                ),
-              ],
-            ),
+              ),
+              Column(
+                children: myProducts,
+              ),
+            ],
+          ),
+              )
+            ],
           ),
         ),
       ),
