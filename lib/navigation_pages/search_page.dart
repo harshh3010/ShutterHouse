@@ -34,6 +34,12 @@ class _SearchPageState extends State<SearchPage> {
   List<Widget> displayedCategories;
   String filter;
 
+
+  Future<void> loadData() async{
+    loadCategories();
+    loadOffers();
+  }
+
   Future<void> loadOffers() async{
     for(var category in CategoryList.getCategories()){
       QuerySnapshot querySnapshot = await Firestore.instance.collection('Products')
@@ -116,8 +122,7 @@ class _SearchPageState extends State<SearchPage> {
     super.initState();
 
     _address = (userApi.address).split(',').toList();
-    loadCategories();
-    loadOffers();
+    loadData();
   }
 
   @override
@@ -131,7 +136,7 @@ class _SearchPageState extends State<SearchPage> {
         width: double.infinity,
         height: double.infinity,
         child: RefreshIndicator(
-          onRefresh: loadCategories,
+          onRefresh: loadData,
           child: CustomScrollView(
             slivers: <Widget>[
               SliverFillRemaining(

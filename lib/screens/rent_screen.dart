@@ -79,10 +79,10 @@ class _RentScreenState extends State<RentScreen> {
       documentReference.setData(product.getProductData()).then((value){
         Navigator.pop(context);
       }).catchError((error){
-        AlertBox().showErrorBox(context,error.message);
+        AlertBox.showErrorBox(context,error.message);
       });
     }).catchError((error){
-      AlertBox().showErrorBox(context,'An error occurred');
+      AlertBox.showErrorBox(context,'An error occurred');
     });
   }
 
@@ -243,7 +243,7 @@ class _RentScreenState extends State<RentScreen> {
                             });
                             if(_name != null && _description != null && _cost != null && _image != null){
                               if(_cost<=0){
-                                AlertBox().showErrorBox(context, 'Please enter a valid rent.');
+                                AlertBox.showErrorBox(context, 'Please enter a valid rent.');
                               }else{
                                 timestamp = (DateTime.now()).toString();
                                 await uploadFile();
@@ -262,7 +262,7 @@ class _RentScreenState extends State<RentScreen> {
                                   c = true;
                                 });
                               if(_image == null){
-                                AlertBox().showErrorBox(context, 'Please select an image for the product.');
+                                AlertBox.showErrorBox(context, 'Please select an image for the product.');
                               }
                             }
                             setState(() {

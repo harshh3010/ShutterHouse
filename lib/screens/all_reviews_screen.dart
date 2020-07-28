@@ -59,7 +59,7 @@ class _AllReviewsScreenState extends State<AllReviewsScreen> {
         .collection('Reviews')
         .document(userApi.email)
         .setData(review.getReviewData()).catchError((error){
-      AlertBox().showErrorBox(context, error.message);
+      AlertBox.showErrorBox(context, error.message);
     });
 
   }
@@ -82,7 +82,7 @@ class _AllReviewsScreenState extends State<AllReviewsScreen> {
         .collection('Rating')
         .document(userApi.email)
         .setData(rating.getRatingData()).catchError((error){
-      AlertBox().showErrorBox(context, error.message);
+      AlertBox.showErrorBox(context, error.message);
     });
 
   }

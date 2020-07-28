@@ -56,7 +56,7 @@ class _BookingScreenState extends State<BookingScreen> {
     documentReference.setData(booking.getBookingData()).then((value){
       Navigator.pop(context);
     }).catchError((error){
-      AlertBox().showErrorBox(context, error.message);
+      AlertBox.showErrorBox(context, error.message);
     });
 
     setState(() {
@@ -147,7 +147,7 @@ class _BookingScreenState extends State<BookingScreen> {
                             lastDate: DateTime(2100),
                           ).then((value) {
                             if(value.day == DateTime.now().day && value.month == DateTime.now().month && value.year == DateTime.now().year){
-                              AlertBox().showErrorBox(context, 'You cannot select today\'s date');
+                              AlertBox.showErrorBox(context, 'You cannot select today\'s date');
                             }else{
                               setState(() {
                                 _startTimestamp = value.millisecondsSinceEpoch;
@@ -207,11 +207,11 @@ class _BookingScreenState extends State<BookingScreen> {
                                  _endDate = formatter.format(value);
                                });
                              }else{
-                               AlertBox().showErrorBox(context, 'Please select a date after start date');
+                               AlertBox.showErrorBox(context, 'Please select a date after start date');
                              }
                             });
                           }else{
-                            AlertBox().showErrorBox(context, 'Please select a starting date first.');
+                            AlertBox.showErrorBox(context, 'Please select a starting date first.');
                           }
                         },
                         child: Text(
@@ -234,7 +234,7 @@ class _BookingScreenState extends State<BookingScreen> {
                           if(_endTimestamp != null){
 
                             if(_endTimestamp - _startTimestamp > 1000*60*60*24*19){
-                              AlertBox().showErrorBox(context, 'You cannot book a product for more than 20 days');
+                              AlertBox.showErrorBox(context, 'You cannot book a product for more than 20 days');
                             }else{
                               bool canBook = true;
                               for(var booking in widget.bookedSlots){
@@ -248,12 +248,12 @@ class _BookingScreenState extends State<BookingScreen> {
                               if(canBook){
                                 await confirmBooking();
                               }else{
-                                AlertBox().showErrorBox(context, 'The product is not available during the selected time period.');
+                                AlertBox.showErrorBox(context, 'The product is not available during the selected time period.');
                               }
                             }
 //
                           }else{
-                            AlertBox().showErrorBox(context, 'Please select a duration first.');
+                            AlertBox.showErrorBox(context, 'Please select a duration first.');
                           }
                         },
                       ),

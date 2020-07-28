@@ -94,7 +94,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
       Navigator.pop(context);
     }).catchError((error){
-      AlertBox().showErrorBox(context, error.message);
+      AlertBox.showErrorBox(context, error.message);
     });
   }
 
@@ -111,7 +111,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       getPlace(position);
 
     }else{
-      AlertBox().showErrorBox(context, 'Please turn on location services');
+      AlertBox.showErrorBox(context, 'Please turn on location services');
     }
 
     setState(() {
@@ -143,7 +143,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     updateUserData();
   }
   void verifyFailed(String msg){
-    AlertBox().showErrorBox(context, 'Verification Failed\n$msg');
+    AlertBox.showErrorBox(context, 'Verification Failed\n$msg');
   }
   Future<void> updatePhoneNumber(){
     _auth.verifyPhoneNumber(

@@ -45,7 +45,7 @@ class _ScheduleCardState extends State<ScheduleCard> {
             )
           );
     }).catchError((error){
-      AlertBox().showErrorBox(context, error.message);
+      AlertBox.showErrorBox(context, error.message);
     });
   }
 

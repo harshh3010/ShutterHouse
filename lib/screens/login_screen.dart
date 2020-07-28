@@ -25,8 +25,6 @@ class _LoginScreenState extends State<LoginScreen> {
   bool e = false,p = false,_loading = false;
   UserApi userApi = UserApi.instance;
 
-  AlertBox alertBox = AlertBox();
-
   void checkUserData() async{
 
     setState(() {
@@ -160,19 +158,19 @@ class _LoginScreenState extends State<LoginScreen> {
                                   }
                                 }catch(e){
                                   switch(e.code){
-                                    case 'ERROR_WRONG_PASSWORD' :  alertBox.showErrorBox(context,'Incorrect password');
+                                    case 'ERROR_WRONG_PASSWORD' :  AlertBox.showErrorBox(context,'Incorrect password');
                                     break;
-                                    case 'ERROR_INVALID_EMAIL' : alertBox.showErrorBox(context,'Please check the email address you entered.');
+                                    case 'ERROR_INVALID_EMAIL' : AlertBox.showErrorBox(context,'Please check the email address you entered.');
                                     break;
-                                    case 'ERROR_USER_NOT_FOUND' : alertBox.showErrorBox(context,'The entered email address is not registered.');
+                                    case 'ERROR_USER_NOT_FOUND' : AlertBox.showErrorBox(context,'The entered email address is not registered.');
                                     break;
-                                    case 'ERROR_USER_DISABLED' : alertBox.showErrorBox(context,'Your account has been blocked.');
+                                    case 'ERROR_USER_DISABLED' : AlertBox.showErrorBox(context,'Your account has been blocked.');
                                     break;
-                                    case 'ERROR_TOO_MANY_REQUESTS' : alertBox.showErrorBox(context,'There were too many login requests from this email, please try again later.');
+                                    case 'ERROR_TOO_MANY_REQUESTS' : AlertBox.showErrorBox(context,'There were too many login requests from this email, please try again later.');
                                     break;
-                                    case 'ERROR_OPERATION_NOT_ALLOWED' : alertBox.showErrorBox(context,'Your account is currently disabled.');
+                                    case 'ERROR_OPERATION_NOT_ALLOWED' : AlertBox.showErrorBox(context,'Your account is currently disabled.');
                                     break;
-                                    default : alertBox.showErrorBox(context,'An error occurred while registering user. Please try again later.');
+                                    default : AlertBox.showErrorBox(context,'An error occurred while registering user. Please try again later.');
                                   }
                                 }
                                 setState(() {
