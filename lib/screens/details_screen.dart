@@ -88,7 +88,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
       Navigator.pushNamed(context, HomeScreen.id);
     }).catchError((error){
-      AlertBox().showErrorBox(context, error.message);
+      AlertBox.showErrorBox(context, error.message);
     });
   }
 
@@ -96,7 +96,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
     addUserData();
   }
   void verifyFailed(String msg){
-    AlertBox().showErrorBox(context, 'Verification Failed\n$msg');
+    AlertBox.showErrorBox(context, 'Verification Failed\n$msg');
   }
   Future registerUser(String mobile, BuildContext context) async{
     _auth.verifyPhoneNumber(
@@ -176,7 +176,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
       getPlace(position);
 
     }else{
-      AlertBox().showErrorBox(context, 'Please turn on location services');
+      AlertBox.showErrorBox(context, 'Please turn on location services');
     }
 
     setState(() {

@@ -4,7 +4,7 @@ import 'package:shutterhouse/utilities/constants.dart';
 
 class AlertBox {
 
-  void showErrorBox(context,String error){
+  static void showErrorBox(context,String error){
     Alert(
       context: context,
       type: AlertType.error,

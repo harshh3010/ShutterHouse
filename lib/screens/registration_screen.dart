@@ -21,8 +21,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   String _email,_password,_cnfpassword;
   bool e = false,p = false,cp = false,_loading = false;
 
-  AlertBox alertBox = AlertBox();
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -143,13 +141,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                   }
                                 }catch(e){
                                   switch(e.code){
-                                    case 'ERROR_WEAK_PASSWORD' :  alertBox.showErrorBox(context,'Your password must be at least 6 characters long.');
+                                    case 'ERROR_WEAK_PASSWORD' :  AlertBox.showErrorBox(context,'Your password must be at least 6 characters long.');
                                     break;
-                                    case 'ERROR_INVALID_EMAIL' : alertBox.showErrorBox(context,'Please check the email address you entered.');
+                                    case 'ERROR_INVALID_EMAIL' : AlertBox.showErrorBox(context,'Please check the email address you entered.');
                                     break;
-                                    case 'ERROR_EMAIL_ALREADY_IN_USE' : alertBox.showErrorBox(context,'The email address you entered is already in use.');
+                                    case 'ERROR_EMAIL_ALREADY_IN_USE' : AlertBox.showErrorBox(context,'The email address you entered is already in use.');
                                     break;
-                                    default : alertBox.showErrorBox(context,'An error occurred while registering user. Please try again later.');
+                                    default : AlertBox.showErrorBox(context,'An error occurred while registering user. Please try again later.');
                                   }
                                 }
                                 setState(() {
@@ -169,7 +167,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                     cp = true;
                                   });
                                 if(_cnfpassword != null && _cnfpassword != _password)
-                                  alertBox.showErrorBox(context,'The confirmation password did not match with chosen password');
+                                  AlertBox.showErrorBox(context,'The confirmation password did not match with chosen password');
                               }
                             },
                           ),

@@ -54,7 +54,7 @@ class _RentPageState extends State<RentPage> {
             ),
           );
     }).catchError((error){
-      AlertBox().showErrorBox(context, error.message);
+      AlertBox.showErrorBox(context, error.message);
     });
   }
 
@@ -68,7 +68,7 @@ class _RentPageState extends State<RentPage> {
             content: Text('Product removed successfully.'),
           ));
     }).catchError((error){
-      AlertBox().showErrorBox(context, error.message);
+      AlertBox.showErrorBox(context, error.message);
     });
   }
 

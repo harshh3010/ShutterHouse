@@ -216,10 +216,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                       child: Padding(
                                         padding: const EdgeInsets.fromLTRB(
                                             30, 10, 0, 0),
-                                        child: Hero(
-                                          tag: '${widget.product.id}',
-                                          child: widget.image,
-                                        ),
+                                        child: widget.image,
                                       ),
                                     ),
                                   ],
@@ -227,17 +224,14 @@ class _ProductScreenState extends State<ProductScreen> {
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 30, vertical: 10),
-                                  child: Hero(
-                                    tag: '${widget.product.id}--NAME',
-                                    child: Text(
-                                      widget.product.name,
-                                      style: TextStyle(
-                                        color: Colors.grey.shade800,
-                                        fontFamily: 'Proxima Nova',
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold,
-                                        decoration: TextDecoration.none,
-                                      ),
+                                  child: Text(
+                                    widget.product.name,
+                                    style: TextStyle(
+                                      color: Colors.grey.shade800,
+                                      fontFamily: 'Proxima Nova',
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                      decoration: TextDecoration.none,
                                     ),
                                   ),
                                 ),
