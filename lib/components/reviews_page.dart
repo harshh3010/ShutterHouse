@@ -6,7 +6,6 @@ import 'package:shutterhouse/components/review_card.dart';
 import 'package:shutterhouse/model/product.dart';
 import 'package:shutterhouse/model/review.dart';
 import 'package:shutterhouse/screens/all_reviews_screen.dart';
-import 'package:shutterhouse/utilities/constants.dart';
 
 class ReviewsPage extends StatefulWidget {
   @override
@@ -51,6 +50,7 @@ class _ReviewsPageState extends State<ReviewsPage> {
         country: snapshot.data['country'],
         city: snapshot.data['city'],
         category: snapshot.data['category'],
+        ownerEmail: snapshot.data['ownerEmail'],
       );
       myList.add(ReviewCard(review: review,));
 

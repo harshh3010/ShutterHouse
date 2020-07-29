@@ -1,6 +1,7 @@
 class Rating{
   double value;
   String customerEmail;
+  String ownerEmail;
   String productId;
   String city;
   String country;
@@ -8,7 +9,7 @@ class Rating{
 
 
   Rating({this.value, this.customerEmail, this.productId, this.city,
-      this.country, this.category});
+      this.country, this.category,this.ownerEmail});
 
   Map<String,Object> getRatingData(){
     return {
@@ -18,6 +19,7 @@ class Rating{
       'city' : this.city,
       'country' : this.country,
       'category' : this.category,
+      'ownerEmail' : this.ownerEmail,
     };
   }
 
