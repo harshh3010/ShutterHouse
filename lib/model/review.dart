@@ -2,6 +2,7 @@ class Review{
 
   String message;
   String customerEmail;
+  String ownerEmail;
   String productId;
   String city;
   String country;
@@ -11,7 +12,7 @@ class Review{
 
 
   Review({this.message, this.customerEmail, this.productId, this.city,
-      this.country, this.category, this.name, this.imageUrl});
+      this.country, this.category, this.name, this.imageUrl,this.ownerEmail});
 
   Map<String,Object> getReviewData(){
     return {
@@ -23,6 +24,7 @@ class Review{
       'category' : this.category,
       'name' : this.name,
       'imageUrl' : this.imageUrl,
+      'ownerEmail' : this.ownerEmail,
     };
   }
 

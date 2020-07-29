@@ -44,6 +44,7 @@ class _BookingScreenState extends State<BookingScreen> {
       startTimestamp: _startTimestamp,
       productId: widget.product.id,
       productName: widget.product.name,
+      contactNo: userApi.phoneNo,
     );
 
     DocumentReference documentReference = await Firestore.instance.collection('Bookings')

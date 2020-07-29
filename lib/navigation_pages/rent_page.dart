@@ -11,6 +11,7 @@ import 'package:shutterhouse/components/product_card.dart';
 import 'package:shutterhouse/components/rounded_button.dart';
 import 'package:shutterhouse/components/text_input_decoration.dart';
 import 'package:shutterhouse/model/product.dart';
+import 'package:shutterhouse/screens/product_bookings_screen.dart';
 import 'package:shutterhouse/screens/rent_screen.dart';
 import 'package:shutterhouse/utilities/constants.dart';
 import 'package:shutterhouse/utilities/user_api.dart';
@@ -210,6 +211,14 @@ class _RentPageState extends State<RentPage> {
               onTapDown: _storePosition,
               child: ProductCard(
                 product: product,
+                onPressed: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProductBookingsScreen(product: product,),
+                    ),
+                  );
+                },
                 onLongPressed: (){
                   displayMenu(product);
                 },

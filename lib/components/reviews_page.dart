@@ -6,7 +6,6 @@ import 'package:shutterhouse/components/review_card.dart';
 import 'package:shutterhouse/model/product.dart';
 import 'package:shutterhouse/model/review.dart';
 import 'package:shutterhouse/screens/all_reviews_screen.dart';
-import 'package:shutterhouse/utilities/constants.dart';
 
 class ReviewsPage extends StatefulWidget {
   @override
@@ -20,12 +19,9 @@ class _ReviewsPageState extends State<ReviewsPage> {
 
   List<Widget> reviewsList = [
     Center(
-      child: Padding(
-        padding: const EdgeInsets.all(80.0),
-        child: CircularProgressIndicator(
-          backgroundColor: Colors.white,
-          strokeWidth: 4,
-        ),
+      child: CircularProgressIndicator(
+        backgroundColor: Colors.white,
+        strokeWidth: 4,
       ),
     ),
   ];
@@ -51,6 +47,7 @@ class _ReviewsPageState extends State<ReviewsPage> {
         country: snapshot.data['country'],
         city: snapshot.data['city'],
         category: snapshot.data['category'],
+        ownerEmail: snapshot.data['ownerEmail'],
       );
       myList.add(ReviewCard(review: review,));
 
@@ -77,50 +74,48 @@ class _ReviewsPageState extends State<ReviewsPage> {
   
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 0,horizontal: 30),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Row(
-              textBaseline: TextBaseline.alphabetic,
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  'User Reviews',
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 0,horizontal: 30),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Row(
+            textBaseline: TextBaseline.alphabetic,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                'User Reviews',
+                style: TextStyle(
+                  fontSize: 30,
+                  fontFamily: 'Proxima Nova',
+                  color: Colors.grey.shade800,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              GestureDetector(
+                onTap: (){
+                  Navigator.push(context,MaterialPageRoute(builder: (context) => AllReviewsScreen(product: widget.product,)));
+                },
+                child: Text(
+                  'View All',
                   style: TextStyle(
-                    fontSize: 30,
                     fontFamily: 'Proxima Nova',
-                    color: Colors.grey.shade800,
-                    fontWeight: FontWeight.bold,
+                    color: Colors.grey.shade400,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold
                   ),
                 ),
-                GestureDetector(
-                  onTap: (){
-                    Navigator.push(context,MaterialPageRoute(builder: (context) => AllReviewsScreen(product: widget.product,)));
-                  },
-                  child: Text(
-                    'View All',
-                    style: TextStyle(
-                      fontFamily: 'Proxima Nova',
-                      color: Colors.grey.shade400,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold
-                    ),
-                  ),
-                )
-              ],
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Column(
-              children: reviewsList,
-            )
-          ],
-        ),
+              )
+            ],
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          Column(
+            children: reviewsList,
+          )
+        ],
       ),
     );
   }

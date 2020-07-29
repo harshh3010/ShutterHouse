@@ -50,6 +50,7 @@ class _AllReviewsScreenState extends State<AllReviewsScreen> {
       message: _messageController.text,
       name: userApi.name,
       imageUrl: userApi.dpURL,
+      ownerEmail: widget.product.ownerEmail,
     );
 
     await Firestore.instance.collection('Reviews and Rating')
@@ -73,6 +74,7 @@ class _AllReviewsScreenState extends State<AllReviewsScreen> {
       customerEmail: userApi.email,
       productId: widget.product.id,
       value : _rating,
+      ownerEmail: widget.product.ownerEmail,
     );
 
     await Firestore.instance.collection('Reviews and Rating')
@@ -107,6 +109,7 @@ class _AllReviewsScreenState extends State<AllReviewsScreen> {
         country: snapshot.data['country'],
         city: snapshot.data['city'],
         category: snapshot.data['category'],
+        ownerEmail: snapshot.data['ownerEmail'],
       );
       myList.add(ReviewCard(review: review,));
 

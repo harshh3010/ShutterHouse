@@ -52,6 +52,7 @@ class _ProfilePageState extends State<ProfilePage> {
           country: snapshot.data['country'],
           city: snapshot.data['city'],
           category: snapshot.data['category'],
+          contactNo: snapshot.data['contactNo'],
         );
         myList.add(booking);
       }
