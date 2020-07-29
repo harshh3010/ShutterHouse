@@ -13,6 +13,7 @@ import 'package:shutterhouse/screens/welcome_screen.dart';
 import 'package:shutterhouse/utilities/constants.dart';
 
 void main(){
+  // Setting status bar transparent
   SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -20,7 +21,6 @@ void main(){
         ),
   );
   runApp(MyApp());
-
 }
 
 class MyApp extends StatelessWidget {
@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         accentColor: kColorRed,
       ),
+      // Defining routes for navigating to different screens
       initialRoute: SplashScreen.id,
       routes: {
         SplashScreen.id : (context) => SplashScreen(),

@@ -18,7 +18,6 @@ class AllReviewsScreen extends StatefulWidget {
 
   final Product product;
   AllReviewsScreen({@required this.product});
-
 }
 
 class _AllReviewsScreenState extends State<AllReviewsScreen> {
@@ -39,8 +38,9 @@ class _AllReviewsScreenState extends State<AllReviewsScreen> {
     ),
   ];
 
+  // Function to submit user's review for the product
   Future<void> submitReview() async {
-
+    // Creating the review object
     Review review = Review(
       category: widget.product.category,
       city: widget.product.city,
@@ -53,6 +53,7 @@ class _AllReviewsScreenState extends State<AllReviewsScreen> {
       ownerEmail: widget.product.ownerEmail,
     );
 
+    // Storing review object in firestore
     await Firestore.instance.collection('Reviews and Rating')
         .document('${widget.product.city},${widget.product.country}')
         .collection(widget.product.category)
@@ -62,11 +63,11 @@ class _AllReviewsScreenState extends State<AllReviewsScreen> {
         .setData(review.getReviewData()).catchError((error){
       AlertBox.showErrorBox(context, error.message);
     });
-
   }
 
+  // Function to submit rating
   Future<void> submitRating() async {
-
+    // Creating the rating object
     Rating rating = Rating(
       category: widget.product.category,
       city: widget.product.city,
@@ -77,6 +78,7 @@ class _AllReviewsScreenState extends State<AllReviewsScreen> {
       ownerEmail: widget.product.ownerEmail,
     );
 
+    // Storing the rating object in firestore
     await Firestore.instance.collection('Reviews and Rating')
         .document('${widget.product.city},${widget.product.country}')
         .collection(widget.product.category)
@@ -86,9 +88,9 @@ class _AllReviewsScreenState extends State<AllReviewsScreen> {
         .setData(rating.getRatingData()).catchError((error){
       AlertBox.showErrorBox(context, error.message);
     });
-
   }
 
+  // Function to load existing reviews
   void loadReviews() async {
     QuerySnapshot querySnapshot = await Firestore.instance.collection('Reviews and Rating')
         .document('${widget.product.city},${widget.product.country}')
@@ -96,9 +98,7 @@ class _AllReviewsScreenState extends State<AllReviewsScreen> {
         .document(widget.product.id)
         .collection('Reviews')
         .getDocuments();
-
     List<ReviewCard> myList = [];
-
     for(var snapshot in querySnapshot.documents){
       Review review = Review(
         imageUrl: snapshot.data['imageUrl'],
@@ -112,12 +112,10 @@ class _AllReviewsScreenState extends State<AllReviewsScreen> {
         ownerEmail: snapshot.data['ownerEmail'],
       );
       myList.add(ReviewCard(review: review,));
-
       setState(() {
         reviewsList = myList;
       });
     }
-
     setState(() {
       reviewsList = myList;
     });
@@ -126,6 +124,7 @@ class _AllReviewsScreenState extends State<AllReviewsScreen> {
   @override
   void initState() {
     super.initState();
+    // Loading the reviews on build
     loadReviews();
   }
 
@@ -243,19 +242,16 @@ class _AllReviewsScreenState extends State<AllReviewsScreen> {
                           color: kColorRed,
                           text: 'Submit',
                           onPressed: () async {
-                            //TODO : update rating and review in product and check for previous rating
                             Navigator.pop(context);
                             setState(() {
                               _loading = true;
                             });
-
                             if(_messageController.text.isEmpty){
                               await submitRating();
                             }else{
                               await submitReview();
                               await submitRating();
                             }
-
                             setState(() {
                               _loading = false;
                             });

@@ -25,13 +25,9 @@ class _BookingScreenState extends State<BookingScreen> {
   final DateFormat formatter = DateFormat('MMMM, d, yyyy');
   UserApi userApi = UserApi.instance;
   bool _loading = false;
-  
+
+  // Function to confirm booking
   Future<void> confirmBooking() async {
-
-    setState(() {
-      _loading = true;
-    });
-
     Booking booking = Booking(
       category: widget.product.category,
       city: widget.product.city,
@@ -46,24 +42,16 @@ class _BookingScreenState extends State<BookingScreen> {
       productName: widget.product.name,
       contactNo: userApi.phoneNo,
     );
-
     DocumentReference documentReference = await Firestore.instance.collection('Bookings')
         .document('${widget.product.city},${widget.product.country}')
         .collection(widget.product.category)
         .document();
-
     booking.setId(documentReference.documentID);
-
     documentReference.setData(booking.getBookingData()).then((value){
       Navigator.pop(context);
     }).catchError((error){
       AlertBox.showErrorBox(context, error.message);
     });
-
-    setState(() {
-      _loading = false;
-    });
-
   }
 
   @override
@@ -141,6 +129,7 @@ class _BookingScreenState extends State<BookingScreen> {
                       ),
                       child: GestureDetector(
                         onTap: () {
+                          // Function to select a date
                           showDatePicker(
                             context: context,
                             initialDate: DateTime.now(),
@@ -195,6 +184,7 @@ class _BookingScreenState extends State<BookingScreen> {
                       ),
                       child: GestureDetector(
                         onTap: () {
+                          // Function to select end date based on some conditions
                           if(_startTimestamp != null){
                             showDatePicker(
                               context: context,
@@ -232,8 +222,11 @@ class _BookingScreenState extends State<BookingScreen> {
                         color: kColorRed,
                         text: 'Confirm Booking',
                         onPressed: () async {
+                          // Calling the confirmBooking function when certain conditions are true
+                          setState(() {
+                            _loading = true;
+                          });
                           if(_endTimestamp != null){
-
                             if(_endTimestamp - _startTimestamp > 1000*60*60*24*19){
                               AlertBox.showErrorBox(context, 'You cannot book a product for more than 20 days');
                             }else{
@@ -252,10 +245,12 @@ class _BookingScreenState extends State<BookingScreen> {
                                 AlertBox.showErrorBox(context, 'The product is not available during the selected time period.');
                               }
                             }
-//
                           }else{
                             AlertBox.showErrorBox(context, 'Please select a duration first.');
                           }
+                          setState(() {
+                            _loading = false;
+                          });
                         },
                       ),
                     )

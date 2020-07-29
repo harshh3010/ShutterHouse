@@ -1,3 +1,5 @@
+// This class will be used to store all the user data, which will be available globally within the app
+
 class UserApi {
 
   UserApi._privateConstructor();
@@ -11,7 +13,6 @@ class UserApi {
   double _latitude;
   double _longitude;
   String _email;
-
   String _dpURL;
   double _rating;
   int _rents;

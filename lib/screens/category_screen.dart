@@ -34,6 +34,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
   List<Widget> displayedProducts;
   String filter;
 
+  // Function to load product under the category
   void loadProducts() async {
     List<ProductCard> myList = [];
     QuerySnapshot querySnapshot = await Firestore.instance
@@ -58,7 +59,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
         reviews: snapshot.data['reviews'],
         rents: snapshot.data['rents'],
       );
-
       availableProducts.add(product);
       myList.add(
         ProductCard(
@@ -84,12 +84,14 @@ class _CategoryScreenState extends State<CategoryScreen> {
   void initState() {
     super.initState();
     _address = (userApi.address).split(',').toList();
+    // Load the products on build
     loadProducts();
   }
 
   @override
   Widget build(BuildContext context) {
 
+    // Checking for any product filters
     if(filter == null){
       displayedProducts = productCards;
     }
@@ -136,6 +138,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 SearchBox(
                   hint: 'Search for a product',
                   onChanged: (value){
+                    // Filtering the products displayed based on value in textfield
                     if(value.toString().trim().isEmpty){
                       setState(() {
                         filter = null;

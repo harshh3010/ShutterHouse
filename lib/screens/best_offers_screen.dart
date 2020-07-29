@@ -13,7 +13,6 @@ class BestOffersScreen extends StatefulWidget {
 }
 
 class _BestOffersScreenState extends State<BestOffersScreen> {
-
   List<Widget> offerCards = [
     Expanded(
       child: Center(
@@ -25,19 +24,22 @@ class _BestOffersScreenState extends State<BestOffersScreen> {
     )
   ];
 
-  void loadOfferList(){
+  // Function to load best offers
+  void loadOfferList() {
     List<Widget> myList = [];
-    for(var product in widget.offerList){
+    for (var product in widget.offerList) {
       myList.add(ProductCard(
         product: product,
-        onPressed: (){
+        onPressed: () {
           Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => ProductScreen(
-                    product: product,
-                    image: Image.network(product.imageURL),
-                  )));
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProductScreen(
+                product: product,
+                image: Image.network(product.imageURL),
+              ),
+            ),
+          );
         },
       ));
     }
@@ -49,11 +51,12 @@ class _BestOffersScreenState extends State<BestOffersScreen> {
   @override
   void initState() {
     super.initState();
+    // Loading the offers at startup
     loadOfferList();
   }
+
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(
       top: false,
       child: Scaffold(
@@ -67,7 +70,7 @@ class _BestOffersScreenState extends State<BestOffersScreen> {
             },
             icon: Padding(
               padding:
-              const EdgeInsets.symmetric(horizontal: 24.0, vertical: 0),
+                  const EdgeInsets.symmetric(horizontal: 24.0, vertical: 0),
               child: Icon(
                 Icons.arrow_back_ios,
                 color: Colors.grey.shade800,
