@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:shutterhouse/components/booking_card.dart';
 import 'package:shutterhouse/components/notification_card.dart';
 import 'package:shutterhouse/model/booking_notification.dart';
-import 'package:shutterhouse/utilities/constants.dart';
 import 'package:shutterhouse/utilities/user_api.dart';
 
 class NotificationScreen extends StatefulWidget {
