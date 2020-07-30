@@ -9,8 +9,10 @@ The sign-in methods used in this app are -<br>
 2. Phone number verification<br>
 <br>
 The storage requirements are met by firebase storage and cloud firestore database.
+<br><br>
+Certain back-end tasks like updating the total user and product reviews, rents and rating are achieved using firebase cloud functions deployed using node js.
 <br>
-Certain back-end tasks like updating the total user and product reviews, rents and rating are achieved using firebase cloud functions deployed using node js
+[You can view the cloud functions here](https://github.com/harshh3010/ShutterHouse/blob/master/Cloud%20Functions/functions/index.js)
 
 ## Mock-ups
 <img src="https://github.com/harshh3010/ShutterHouse/blob/master/Mockups/HomeScreen.png" width="300px">
