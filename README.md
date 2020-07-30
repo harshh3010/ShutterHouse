@@ -16,7 +16,6 @@ The storage requirements are met by firebase storage and cloud firestore databas
 <br>
 <img src="https://github.com/harshh3010/ShutterHouse/blob/master/Mockups/nodejs-logo.png" width="200px">
 Certain back-end tasks like updating the total user and product reviews, rents and rating are achieved using firebase cloud functions deployed using node js.
-<br>
 [You can find the cloud functions here](https://github.com/harshh3010/ShutterHouse/blob/master/Cloud%20Functions/functions/index.js)
 <br>
 
