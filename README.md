@@ -29,7 +29,6 @@ Certain back-end tasks like updating the total user and product reviews, rents a
 <img src="https://github.com/harshh3010/ShutterHouse/blob/master/Mockups/ProductScreen2.png" width="300px">
 
 ### Final APK
-<br>
 [You can find the final apk files here](https://github.com/harshh3010/ShutterHouse/tree/master/Release%20APK%20Files)
 <br>
 Due to google's change in policy for deploying cloud functions for firebase. You may experience some issues (eg- Reviews/rents/rating not being updated, not receiving notification,etc) within the app.
