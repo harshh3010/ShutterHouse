@@ -30,6 +30,14 @@ Certain back-end tasks like updating the total user and product reviews, rents a
 6. **intl**: For formatting the DateTime values chosen while booking a product
 7. **flutter_rating_bar**: To allow user's to rate a product
 
+## Firestore database structure
+1. **User data**: Users/{userEmail}/
+2. **Product bookings**: Bookings/{city,country}/{productCategory}/{bookingId}
+3. **Product data**: Products/{city,country}/{productCategory}/{productId}
+4. **Reviews**: Reviews and Rating/{city,country}/{productCategory}/{productId}/Reviews/{customerEmail}
+5. **Rating**: Reviews and Rating/{city,country}/{productCategory}/{productId}/Rating/{customerEmail}
+6. **Notifications**: Notifications/{receiverEmail}/Notifications
+
 ## Mock-ups
 <img src="https://github.com/harshh3010/ShutterHouse/blob/master/Mockups/HomeScreen.png" width="300px">
 <img src="https://github.com/harshh3010/ShutterHouse/blob/master/Mockups/ProfileScreen.png" width="300px">
