@@ -33,6 +33,7 @@ class _RentScreenState extends State<RentScreen> {
   List<String> _address;
   String timestamp;
 
+  // Function to pick a file from gallery
   Future chooseFile() async {
     await ImagePicker.pickImage(source: ImageSource.gallery).then((image) {
       setState(() {
@@ -41,6 +42,7 @@ class _RentScreenState extends State<RentScreen> {
     });
   }
 
+  // Function to upload product image to firebase storage
   Future uploadFile() async {
     StorageReference storageReference = FirebaseStorage.instance
         .ref()
@@ -53,6 +55,7 @@ class _RentScreenState extends State<RentScreen> {
     });
   }
 
+  // Function to add product data to firebase
   void addProduct(String url) async {
 
     Product product = Product(

@@ -25,12 +25,11 @@ class _LoginScreenState extends State<LoginScreen> {
   bool e = false,p = false,_loading = false;
   UserApi userApi = UserApi.instance;
 
+  // Function to check User data in database and correspondingly redirect user to necessary screen
   void checkUserData() async{
-
     setState(() {
       _loading = true;
     });
-
     final snapShot = await Firestore.instance
         .collection('Users')
         .document(_email)
@@ -51,7 +50,6 @@ class _LoginScreenState extends State<LoginScreen> {
       userApi.rating = snapShot.data['rating'];
       Navigator.pushReplacementNamed(context, HomeScreen.id);
     }
-
     setState(() {
       _loading = false;
     });

@@ -23,6 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
   FirebaseUser _currentUser;
   UserApi userApi = UserApi.instance;
 
+  // Function to check User data in database and correspondingly redirect user to necessary screen
   void checkUserData() async{
 
     final snapShot = await Firestore.instance
@@ -47,6 +48,7 @@ class _SplashScreenState extends State<SplashScreen> {
     }
   }
 
+  // Function to get current user
   void getCurrentUser() async{
     try{
       final user = await _auth.currentUser();
@@ -65,7 +67,6 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-
     getCurrentUser();
   }
 

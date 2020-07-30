@@ -23,6 +23,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     ),
   ];
 
+  // Function to get notifications from the database
   Future<void> getNotifications() async {
     List<Widget> myList = [];
     QuerySnapshot querySnapshot = await Firestore.instance

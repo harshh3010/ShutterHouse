@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -32,24 +31,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController _nameController = TextEditingController();
   TextEditingController _phoneController = TextEditingController();
   TextEditingController _codeController = TextEditingController();
-
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Firestore _firestore = Firestore.instance;
   AuthCredential _credential;
-
   bool imagePicked = false;
   File _image ;
   final picker = ImagePicker();
   String _uploadedFileURL;
 
+  // Function to pick an image from gallery
   Future chooseFile() async {
-    // ignore: deprecated_member_use
     await ImagePicker.pickImage(source: ImageSource.gallery).then((image) {
       setState(() {
         _image = image;
       });
     });
   }
+
+  // Function to upload file to firebase storage
   Future uploadFile() async {
     StorageReference storageReference = FirebaseStorage.instance
         .ref()
@@ -64,6 +63,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     });
   }
 
+  // Function to update user data in database
   void updateUserData() async {
 
     User user = User(
@@ -98,6 +98,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     });
   }
 
+  // Function to obtain user's position
   void getCurrentLocation() async {
     setState(() {
       _loading = true;
@@ -118,6 +119,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       _loading = false;
     });
   }
+
+  // Function to get user's address
   void getPlace(Position position) async {
     List<Placemark> newPlace = await Geolocator().placemarkFromCoordinates(position.latitude, position.longitude);
 
@@ -130,8 +133,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     String country = placeMark.country;
     String address = "${name}, ${subLocality}, ${locality}, ${administrativeArea} ${postalCode}, ${country}";
 
-    print(address);
-
     setState(() {
       _address = address;
       _addressController.text = address;
@@ -139,6 +140,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     });
   }
 
+  // Functions to verify user's phone number
   void verifySuccess(){
     updateUserData();
   }
@@ -189,7 +191,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     }).catchError((error){
                       verifyFailed(error.message);
                     });
-
                     setState(() {
                       _loading = false;
                     });
@@ -346,11 +347,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       child: RoundedButton(
                         color: kColorRed,
                         onPressed: () async {
-
                           setState(() {
                             _loading = true;
                           });
-
                           if(_phoneNo != null && _name != null && _address != ""){
 
                             if(_image != null){
@@ -358,7 +357,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             }else{
                               _uploadedFileURL = kInitialDpUrl;
                             }
-
                             updatePhoneNumber();
                           }else{
                             if(_phoneNo == null)
@@ -374,7 +372,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 l = true;
                               });
                           }
-
                           setState(() {
                             _loading = false;
                           });
