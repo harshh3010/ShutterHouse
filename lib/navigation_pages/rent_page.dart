@@ -1,9 +1,7 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shutterhouse/components/alert_box.dart';
 import 'package:shutterhouse/components/category_list.dart';
 import 'package:shutterhouse/components/menu_option.dart';
@@ -42,6 +40,7 @@ class _RentPageState extends State<RentPage> {
     ),
   ];
 
+  // Function to set a discount for the product
   Future<void> addDiscount(Product product) async{
     await Firestore.instance.collection('Products')
         .document('${product.city},${product.country}')
@@ -59,6 +58,7 @@ class _RentPageState extends State<RentPage> {
     });
   }
 
+  // Function to remove the product
   Future<void> removeProduct(Product product) async {
     await Firestore.instance.collection('Products')
         .document('${_address[2]},${_address[4]}')

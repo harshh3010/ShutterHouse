@@ -34,12 +34,13 @@ class _SearchPageState extends State<SearchPage> {
   List<Widget> displayedCategories;
   String filter;
 
-
+  // Function to load categories and offers
   Future<void> loadData() async{
     loadCategories();
     loadOffers();
   }
 
+  // Function to load offers
   Future<void> loadOffers() async{
     for(var category in CategoryList.getCategories()){
       QuerySnapshot querySnapshot = await Firestore.instance.collection('Products')
@@ -86,6 +87,7 @@ class _SearchPageState extends State<SearchPage> {
     });
   }
 
+  // Function to load categories
   Future<void> loadCategories() async{
     categoryCards = [
       SizedBox(width: 30.0,),
@@ -120,7 +122,6 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     super.initState();
-
     _address = (userApi.address).split(',').toList();
     loadData();
   }

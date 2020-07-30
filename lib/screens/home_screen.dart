@@ -1,9 +1,7 @@
 import 'dart:ui';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -139,6 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
 
+    // Bottom navigation bar will be used to navigate to these pages
     List<Widget> navigationPages = [
       SearchPage(),
       ProfilePage(),

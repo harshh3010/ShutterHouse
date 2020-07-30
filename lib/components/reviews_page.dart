@@ -19,6 +19,7 @@ class _ReviewsPageState extends State<ReviewsPage> {
 
   List<Widget> reviewsList = [
     Center(
+
       child: CircularProgressIndicator(
         backgroundColor: Colors.white,
         strokeWidth: 4,

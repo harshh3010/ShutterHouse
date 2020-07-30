@@ -42,6 +42,7 @@ class _ProductScreenState extends State<ProductScreen> {
       ),
     ];
 
+    // Function to check existing bookings for the product
     void checkAvailability() async {
       setState(() {
         _loading = true;

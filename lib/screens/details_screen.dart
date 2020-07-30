@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -27,17 +26,16 @@ class _DetailsScreenState extends State<DetailsScreen> {
   final Firestore _firestore = Firestore.instance;
   FirebaseUser _currentUser;
   AuthCredential _credential;
-
   TextEditingController _codeController = TextEditingController();
   TextEditingController _addressController = TextEditingController();
   String _phoneNo,_name,smsCode,verificationId,_address = "";
   bool p = false,n = false,l = false,isEnabled = true,_loading = false;
   Position position;
-
   File _image;
   final picker = ImagePicker();
   String _uploadedFileURL;
 
+  // Function to pick an image from gallery
   Future chooseFile() async {
     await ImagePicker.pickImage(source: ImageSource.gallery).then((image) {
       setState(() {
@@ -45,6 +43,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
       });
     });
   }
+
+  // Function to upload image in firebase storage
   Future uploadFile() async {
     StorageReference storageReference = FirebaseStorage.instance
         .ref()
@@ -59,7 +59,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
     });
   }
 
+  // Function to store user data in firestore
   void addUserData() async {
+    // Creating the user object
     User user = User(
       name: _name,
       phoneNo: _phoneNo,
@@ -73,6 +75,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
       rating: 0,
     );
 
+    // Storing the data in firestore
     await _firestore.collection('Users').document(user.email).setData(user.getUserData()).then((value){
       UserApi userApi = UserApi.instance;
       userApi.name = user.name;
@@ -86,12 +89,15 @@ class _DetailsScreenState extends State<DetailsScreen> {
       userApi.reviews = user.reviews;
       userApi.rating = user.rating;
 
+      // Navigating to home screen after data added
       Navigator.pushNamed(context, HomeScreen.id);
     }).catchError((error){
+      // Displaying error in case of failure
       AlertBox.showErrorBox(context, error.message);
     });
   }
 
+  // Following 3 functions contain the code to verify user's phone number and link it to his email
   void verifySuccess(){
     addUserData();
   }
@@ -134,10 +140,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       _loading = true;
                     });
                     smsCode = _codeController.text.trim();
-
                     _credential = null;
                     _credential = PhoneAuthProvider.getCredential(verificationId: verificationId, smsCode: smsCode);
-
                     _currentUser.linkWithCredential(_credential).then((user) {
                       Navigator.pop(context);
                       verifySuccess();
@@ -145,7 +149,6 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       print(error.toString());
                       verifyFailed(error.message);
                     });
-
                     setState(() {
                       _loading = false;
                     });
@@ -163,26 +166,24 @@ class _DetailsScreenState extends State<DetailsScreen> {
     );
   }
 
+  // Function to fetch user's current location
   void getCurrentLocation() async {
     setState(() {
       _loading = true;
     });
-
     bool isLocationEnabled = await Geolocator().isLocationServiceEnabled();
     if(isLocationEnabled){
       position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-      print(position);
-
       getPlace(position);
-
     }else{
       AlertBox.showErrorBox(context, 'Please turn on location services');
     }
-
     setState(() {
       _loading = false;
     });
   }
+
+  // Function to fetch user's address from his location
   void getPlace(Position position) async {
     List<Placemark> newPlace = await Geolocator().placemarkFromCoordinates(position.latitude, position.longitude);
 
@@ -204,6 +205,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
     });
   }
 
+  // Function to get the currently logged-in user
   void getCurrentUser() async{
     try{
       final user = await _auth.currentUser();
@@ -214,9 +216,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
       print(e);
     }
   }
+
   @override
   void initState() {
     super.initState();
+    // Obtaining user on build
     getCurrentUser();
   }
 
@@ -324,11 +328,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       child: RoundedButton(
                         color: kColorRed,
                         onPressed: () async {
-
                           setState(() {
                             _loading = true;
                           });
-
                           if(_phoneNo != null && _name != null && _address != ""){
 
                             if(_image != null){
@@ -336,7 +338,6 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             }else{
                               _uploadedFileURL = 'gs://shutter-house-59213.appspot.com/avatar.png';
                             }
-
                             registerUser(_phoneNo, context);
                           }else{
                             if(_phoneNo == null)
@@ -352,7 +353,6 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                 l = true;
                               });
                           }
-
                           setState(() {
                             _loading = false;
                           });
@@ -369,6 +369,4 @@ class _DetailsScreenState extends State<DetailsScreen> {
       ),
     );
   }
-
-
 }

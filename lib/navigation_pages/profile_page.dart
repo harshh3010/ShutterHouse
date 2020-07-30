@@ -28,6 +28,7 @@ class _ProfilePageState extends State<ProfilePage> {
   List<String> _address;
   List<Booking> myBookings = [];
 
+  // Function to load all the user's bookings
   Future<void> loadBookings() async {
     List<Booking> myList = [];
 

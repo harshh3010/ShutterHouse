@@ -15,7 +15,6 @@ class ProductBookingsScreen extends StatefulWidget {
   ProductBookingsScreen({@required this.product});
 }
 
-
 class _ProductBookingsScreenState extends State<ProductBookingsScreen> {
   List<Widget> productBookingCards = [
     Center(
@@ -26,9 +25,9 @@ class _ProductBookingsScreenState extends State<ProductBookingsScreen> {
     ),
   ];
 
+  // Function to load current bookings
   Future<void> loadBookings() async {
     List<BookingCard> myList = [];
-
     for (var category in CategoryList.getCategories()) {
       QuerySnapshot querySnapshot = await Firestore.instance
           .collection('Bookings')
